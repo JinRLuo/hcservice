@@ -1,4 +1,4 @@
-package com.jinr.hcservice;
+package com.hcservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
