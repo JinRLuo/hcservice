@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication(scanBasePackages = {"com.hcservice"})
-@RestController
 @MapperScan("com.hcservice.dao")
 public class HcserviceApplication {
 
