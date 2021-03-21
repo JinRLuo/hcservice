@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("/admin")
 public class UserController extends BaseController {
 
-    @RequestMapping(value = "/login",method = {RequestMethod.POST})
-    public BaseResult login() {
+    @RequestMapping(value = "/doLogin",method = {RequestMethod.POST, RequestMethod.GET})
+    public BaseResult login(String account, String password) {
         BaseResult result = new BaseResult();
         return result;
     }

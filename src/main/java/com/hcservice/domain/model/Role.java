@@ -24,6 +24,8 @@ public class Role {
      */
     private String roleName;
 
+    private String detail;
+
     private List<Admin> admins;
 
     public List<Admin> getAdmins() {
@@ -80,5 +82,13 @@ public class Role {
      */
     public void setRoleName(String roleName) {
         this.roleName = roleName == null ? null : roleName.trim();
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }

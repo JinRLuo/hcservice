@@ -1,5 +1,6 @@
 package com.hcservice;
 
+import com.hcservice.dao.AdminMapper;
 import com.hcservice.domain.model.Admin;
 import com.hcservice.domain.model.Role;
 import com.hcservice.service.UserService;
@@ -15,10 +16,14 @@ class HcserviceApplicationTests {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AdminMapper adminMapper;
+
     @Test
     void contextLoads() {
         Integer adminId = 1;
-        Admin admin = userService.getAdminById(adminId);
+        String adminName = "test0001";
+        Admin admin = adminMapper.getAdminByName(adminName);
         System.out.println(admin.toString());
 //        List<Role> list = admin.getRoles();
 //        for(Role r : list) {
