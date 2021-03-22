@@ -2,6 +2,8 @@ package com.hcservice.dao;
 
 import com.hcservice.domain.model.Role;
 
+import java.util.List;
+
 public interface RoleMapper {
 
     int deleteByPrimaryKey(Integer roleId);
@@ -11,6 +13,8 @@ public interface RoleMapper {
     int insertSelective(Role record);
 
     Role selectByPrimaryKey(Integer roleId);
+
+    List<Role> getRolesByAdminId(Integer adminId);
 
     int updateByPrimaryKeySelective(Role record);
 

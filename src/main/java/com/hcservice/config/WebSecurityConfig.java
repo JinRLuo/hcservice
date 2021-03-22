@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/home").permitAll()
+                .antMatchers("/", "/login").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasRole("USER")
                 //anyRequest需要放在最后才不会报错 表示前面拦截剩下的请求
@@ -69,11 +69,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     out.flush();
                     out.close();
                 })
-                .loginPage("/login")
                 .loginProcessingUrl("/doLogin")
                 .usernameParameter("account")
                 .passwordParameter("password")
                 .permitAll()
+                .and()
+                .rememberMe()
+                .key("hcservice")  //用来加密cookie中的token
                 .and()
                 //注销
                 .logout()

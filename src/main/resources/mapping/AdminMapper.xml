@@ -9,26 +9,36 @@
     <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
     <result column="PICTURE_URL" jdbcType="VARCHAR" property="pictureUrl" />
     <result column="STATUS" jdbcType="BOOLEAN" property="status" />
-    <collection property="roles" ofType="com.hcservice.domain.model.Role">
-      <id property="roleId" column="ROLE_ID" />
-      <result property="roleName" column="ROLE_NAME" />
-      <result property="detail" column="DETAIL" />
-    </collection>
+    <collection property="roles" ofType="com.hcservice.domain.model.Role" select="com.hcservice.dao.RoleMapper.getRolesByAdminId" column="ADMIN_ID" />
+  </resultMap>
+  <resultMap id="AdminResultMap" type="com.hcservice.domain.model.Admin">
+    <id column="ADMIN_ID" jdbcType="INTEGER" property="adminId" />
+    <result column="ADMIN_NAME" jdbcType="VARCHAR" property="adminName" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="PHONE_NUMBER" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <result column="PICTURE_URL" jdbcType="VARCHAR" property="pictureUrl" />
+    <result column="STATUS" jdbcType="BOOLEAN" property="status" />
   </resultMap>
   <sql id="Base_Column_List">
-    ADMIN_ID, ADMIN_NAME, EMAIL, PHONE_NUMBER, PASSWORD, PICTURE_URL, STATUS, ROLE_ID, ROLE_NAME, DETAIL
+    ADMIN_ID, ADMIN_NAME, EMAIL, PHONE_NUMBER, PASSWORD, PICTURE_URL, STATUS
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from ADMIN_INFO a, ROLE r, ADMIN_ROLE ar
-    where a.ADMIN_ID = ar.AID AND ar.RID = r.ROLE_ID AND ADMIN_ID = #{adminId,jdbcType=INTEGER}
+    from ADMIN_INFO
+    where ADMIN_ID = #{adminId,jdbcType=INTEGER}
   </select>
   <select id="getAdminByName" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from ADMIN_INFO a, ROLE r, ADMIN_ROLE ar
-    where a.ADMIN_ID = ar.AID AND ar.RID = r.ROLE_ID AND ADMIN_NAME = #{adminName,jdbcType=VARCHAR}
+    from ADMIN_INFO
+    where ADMIN_NAME = #{adminName,jdbcType=VARCHAR}
+  </select>
+  <select id="getAdminsByRoleId" resultMap="AdminResultMap" parameterType="java.lang.Integer">
+    SELECT a.*
+    FROM ADMIN_ROLE ar, ADMIN_INFO a
+    WHERE ar.AID = a.ADMIN_ID AND ar.RID = #{ROLE_ID}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ADMIN_INFO

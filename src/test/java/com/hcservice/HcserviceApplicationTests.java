@@ -24,11 +24,8 @@ class HcserviceApplicationTests {
         Integer adminId = 1;
         String adminName = "test0001";
         Admin admin = adminMapper.getAdminByName(adminName);
-        System.out.println(admin.toString());
-//        List<Role> list = admin.getRoles();
-//        for(Role r : list) {
-//            System.out.println(r.getRoleName());
-//        }
+        //Admin admin = adminMapper.selectByPrimaryKey(adminId);
+        System.out.println(admin);
 
 
     }
