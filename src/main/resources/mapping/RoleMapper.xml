@@ -6,11 +6,19 @@
     <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
     <result column="DETAIL" jdbcType="VARCHAR" property="detail" />
     <collection property="admins" ofType="com.hcservice.domain.model.Admin" select="com.hcservice.dao.AdminMapper.getAdminsByRoleId" column="ROLE_ID" />
+    <collection property="permissions" ofType="com.hcservice.domain.model.Permission" select="com.hcservice.dao.PermissionMapper.getPermissionsByRoleId" column="ROLE_ID" />
   </resultMap>
-  <resultMap id="RoleResultMap" type="com.hcservice.domain.model.Role">
+  <resultMap id="RoleResultMap1" type="com.hcservice.domain.model.Role">
     <id column="ROLE_ID" jdbcType="INTEGER" property="roleId" />
     <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
     <result column="DETAIL" jdbcType="VARCHAR" property="detail" />
+    <collection property="permissions" ofType="com.hcservice.domain.model.Permission" select="com.hcservice.dao.PermissionMapper.getPermissionsByRoleId" column="ROLE_ID" />
+  </resultMap>
+  <resultMap id="RoleResultMap2" type="com.hcservice.domain.model.Role">
+    <id column="ROLE_ID" jdbcType="INTEGER" property="roleId" />
+    <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
+    <result column="DETAIL" jdbcType="VARCHAR" property="detail" />
+    <collection property="admins" ofType="com.hcservice.domain.model.Admin" select="com.hcservice.dao.AdminMapper.getAdminsByRoleId" column="ROLE_ID" />
   </resultMap>
   <sql id="Base_Column_List">
     ROLE_ID, ROLE_NAME, DETAIL
@@ -21,10 +29,15 @@
     from ROLE
     where ROLE_ID = #{roleId,jdbcType=INTEGER}
   </select>
-  <select id="getRolesByAdminId" resultMap="RoleResultMap" parameterType="java.lang.Integer">
+  <select id="getRolesByAdminId" resultMap="RoleResultMap1" parameterType="java.lang.Integer">
     SELECT r.*
     FROM ADMIN_ROLE ar, ROLE r
     WHERE ar.RID = r.ROLE_ID AND ar.AID = #{ADMIN_ID}
+  </select>
+  <select id="getRolesByPermissionId" resultMap="RoleResultMap2" parameterType="java.lang.Integer">
+    SELECT r.*
+    FROM ROLE_PERMISSION rp, ROLE r
+    WHERE rp.ROLE_ID = r.ROLE_ID AND rp.PERMISSION_ID = #{permissionId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ROLE

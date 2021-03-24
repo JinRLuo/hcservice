@@ -12,6 +12,7 @@ public enum ErrorCode {
     ACCOUNT_NOT_LOGIN(20003,"用户还未登录"),
     ACCOUNT_DISABLED(20004,"账户被禁用，请联系管理员!"),
     ACCOUNT_EXPIRED(20005,"账号过期，请联系管理员!"),
+    ACCOUNT_NAME_EXISTS(20006,"该用户名已被注册"),
 
 
 

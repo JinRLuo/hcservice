@@ -1,5 +1,6 @@
 package com.hcservice.dao;
 
+import com.hcservice.domain.model.Permission;
 import com.hcservice.domain.model.Role;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface RoleMapper {
     Role selectByPrimaryKey(Integer roleId);
 
     List<Role> getRolesByAdminId(Integer adminId);
+
+    List<Permission> getRolesByPermissionId(Integer permissionId);
 
     int updateByPrimaryKeySelective(Role record);
 

@@ -1,8 +1,11 @@
 package com.hcservice.config;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hcservice.common.ErrorCode;
+import com.hcservice.domain.model.Admin;
 import com.hcservice.domain.response.BaseResult;
+import com.hcservice.filter.UserFilterSecurityInterceptor;
 import com.hcservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,13 +13,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+
 import java.io.PrintWriter;
 
 
@@ -27,18 +34,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserFilterSecurityInterceptor userFilterSecurityInterceptor;
+
     @Bean
     PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/login").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/","/common/**").permitAll()
                 //anyRequest需要放在最后才不会报错 表示前面拦截剩下的请求
                 .anyRequest().authenticated()
                 .and()
@@ -48,7 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     Object principal = authentication.getPrincipal();
                     resp.setContentType("application/json;charset=utf-8");
                     PrintWriter out = resp.getWriter();
-                    out.write(new ObjectMapper().writeValueAsString(principal));
+                    Admin admin = (Admin) principal;
+                    out.write(JSON.toJSONString(BaseResult.create(admin.getAdminName())));
                     out.flush();
                     out.close();
                 })
@@ -69,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     out.flush();
                     out.close();
                 })
-                .loginProcessingUrl("/doLogin")
+                .loginProcessingUrl("/common/login")
                 .usernameParameter("account")
                 .passwordParameter("password")
                 .permitAll()
@@ -79,7 +88,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //注销
                 .logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/common/logout")
                 .logoutSuccessHandler((req, resp, authentication) -> {
                     resp.setContentType("application/json;charset=utf-8");
                     PrintWriter out = resp.getWriter();
@@ -101,6 +110,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     out.flush();
                     out.close();
                 });
+        http.addFilterBefore(userFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
 
 
@@ -117,15 +127,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService);
+        //auth.userDetailsService(userService);
+        auth.authenticationProvider(authenticationProvider());
     }
 
-    //配置角色的继承关系
+    /**
+     * @return 封装身份认证提供者
+     */
     @Bean
-    RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
-        hierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
-        return hierarchy;
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userService);  //自定义的用户和角色数据提供者
+        authenticationProvider.setPasswordEncoder(passwordEncoder()); //设置密码加密对象
+        return authenticationProvider;
     }
 
 }

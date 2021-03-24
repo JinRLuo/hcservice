@@ -1,5 +1,10 @@
 package com.hcservice.domain.model;
 
+import lombok.ToString;
+
+import java.util.List;
+
+@ToString
 public class Permission {
 
     private Integer permissionId;
@@ -9,6 +14,8 @@ public class Permission {
     private String description;
 
     private Integer pid;
+
+    private List<Role> roles;
 
     public Integer getPermissionId() {
         return permissionId;
@@ -40,5 +47,13 @@ public class Permission {
 
     public void setPid(Integer pid) {
         this.pid = pid;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
