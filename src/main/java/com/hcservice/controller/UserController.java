@@ -17,13 +17,13 @@ public class UserController extends BaseController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/login", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(value = "/login", method = {RequestMethod.POST})
     public BaseResult login(String account, String password) {
         BaseResult result = new BaseResult();
         return result;
     }
 
-    @RequestMapping(value = "/register", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(value = "/register", method = {RequestMethod.POST})
     public BaseResult register(String account, String email, String phoneNumber, String password) {
         Admin admin = new Admin();
         admin.setAdminName(account);
