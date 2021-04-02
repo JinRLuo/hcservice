@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcservice.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="com.hcservice.domain.model.User">
+        <id column="USER_ID" jdbcType="INTEGER" property="userId" />
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+        <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+        <result column="PHONE_NUMBER" jdbcType="VARCHAR" property="phoneNum" />
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+        <result column="PICTURE_URL" jdbcType="VARCHAR" property="pictureUrl" />
+        <result column="STATUS" jdbcType="BOOLEAN" property="status" />
+    </resultMap>
+    <select id="getUserByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select USER_ID, USER_NAME, EMAIL, PHONE_NUMBER, PASSWORD, PICTURE_URL, STATUS
+        from USER_INFO
+        where USER_ID = #{userId,jdbcType=INTEGER}
+    </select>
+    <select id="getUserByPhoneNum" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select USER_ID, USER_NAME, EMAIL, PHONE_NUMBER, PASSWORD, PICTURE_URL, STATUS
+        from USER_INFO
+        where PHONE_NUMBER = #{phoneNum,jdbcType=VARCHAR}
+    </select>
+    <insert id="insertUser" parameterType="com.hcservice.domain.model.User">
+    insert into USER_INFO (USER_NAME, EMAIL,
+      PHONE_NUMBER, PASSWORD, PICTURE_URL,
+      STATUS)
+    values (#{userName,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+      #{phoneNum,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{pictureUrl,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER})
+  </insert>
+</mapper>

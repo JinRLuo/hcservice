@@ -1,4 +1,4 @@
-package com.hcservice.filter;
+package com.hcservice.web.filter;
 
 import com.hcservice.service.impl.UserAccessDecisionManager;
 import com.hcservice.service.impl.UserInvocationSecurityMetadataSourceService;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.servlet.*;
 import java.io.IOException;
-import java.util.logging.LogRecord;
 
 @Component
 public class UserFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {

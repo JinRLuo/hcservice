@@ -5,6 +5,8 @@ public enum ErrorCode {
     //通用错误类型1000
     PARAMETER_VALIDATION_ERROR(10001,"参数不合法"),
     UNKNOWN_ERROR(10002,"未知错误"),
+    PHONE_FORMAT_ERROR(10003,"手机号格式错误"),
+
 
     //20000开头为用户信息相关错误定义
     ACCOUNT_NOT_EXIST(20001,"用户不存在"),
@@ -13,6 +15,11 @@ public enum ErrorCode {
     ACCOUNT_DISABLED(20004,"账户被禁用，请联系管理员!"),
     ACCOUNT_EXPIRED(20005,"账号过期，请联系管理员!"),
     ACCOUNT_NAME_EXISTS(20006,"该用户名已被注册"),
+    PASSWORD_TOO_SIMPLE(20007,"密码强度太低"),
+    OTP_CODE_ERROR(20008,"验证码错误"),
+    GET_OTP_CODE_FREQUENTLY(20009,"获取验证码太频繁"),
+    PHONE_NUMBER_UNREGISTERED(20010,"该手机号未注册"),
+    PHONE_NUMBER_HAS_BEEN_REGISTERED(20011,"该手机号已经被注册过了"),
 
 
 
