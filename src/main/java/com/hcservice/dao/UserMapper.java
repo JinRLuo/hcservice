@@ -10,4 +10,6 @@ public interface UserMapper {
 
     User getUserByPhoneNum(String phoneNum);
 
+    int updateUserById(User user);
+
 }

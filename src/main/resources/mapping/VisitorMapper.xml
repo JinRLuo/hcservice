@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcservice.dao.VisitorMapper">
+    <resultMap id="BaseResultMap" type="com.hcservice.domain.model.Visitor">
+        <id column="VISITOR_ID" jdbcType="INTEGER" property="visitorId" />
+        <result column="PEOPLE_COUNT" jdbcType="INTEGER" property="peopleCount" />
+        <result column="VISITOR_NAME" jdbcType="VARCHAR" property="visitorName" />
+        <result column="VISIT_TIME" jdbcType="TIMESTAMP" property="visitTime" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="PHONE_NUMBER" jdbcType="VARCHAR" property="phoneNum" />
+        <result column="STATUS" jdbcType="INTEGER" property="status" />
+        <result column="VISITING_REASON" jdbcType="VARCHAR" property="visitingReason" />
+        <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+        <association property="room" select="com.hcservice.dao.RoomMapper.getRoomById" column="ROOM_ID" />
+        <association property="user" select="com.hcservice.dao.UserMapper.getUserByUserId" column="USER_ID" />
+    </resultMap>
+    <select id="getVisitorByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select VISITOR_ID, PEOPLE_COUNT, VISITOR_NAME, VISIT_TIME, CREATE_TIME, PHONE_NUMBER, STATUS, VISITING_REASON, REMARK, ROOM_ID, USER_ID
+        from VISITOR
+        where USER_ID = #{userId,jdbcType=INTEGER}
+    </select>
+    <insert id="insertVisitor" parameterType="com.hcservice.domain.model.Visitor">
+    insert into VISITOR (VISITOR_ID, PEOPLE_COUNT, VISITOR_NAME, VISIT_TIME, CREATE_TIME, PHONE_NUMBER, STATUS, VISITING_REASON, REMARK, ROOM_ID, USER_ID)
+    values (
+        #{visitorId,jdbcType=INTEGER},
+        #{peopleCount,jdbcType=INTEGER},
+        #{visitorName,jdbcType=VARCHAR},
+        #{visitTime,jdbcType=TIMESTAMP},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{phoneNum,jdbcType=VARCHAR},
+        #{status,jdbcType=INTEGER},
+        #{visitingReason,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{room.roomId,jdbcType=INTEGER},
+        #{user.userId,jdbcType=INTEGER}
+    )
+  </insert>
+</mapper>

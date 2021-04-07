@@ -1,4 +1,4 @@
-package com.hcservice.common;
+package com.hcservice.common.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

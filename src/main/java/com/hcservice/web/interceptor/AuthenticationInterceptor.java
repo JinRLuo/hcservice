@@ -9,9 +9,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.hcservice.annotation.PassToken;
 import com.hcservice.annotation.UserLoginToken;
 import com.hcservice.common.ErrorCode;
-import com.hcservice.domain.model.Admin;
 import com.hcservice.domain.model.User;
-import com.hcservice.domain.response.BaseResult;
+import com.hcservice.common.BaseResult;
 import com.hcservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
@@ -28,6 +27,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Autowired
     UserService userService;
+
+    // 定义一个线程域，存放登录用户
+    private static final ThreadLocal<User> threadLocal = new ThreadLocal<>();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -76,6 +78,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     responseError(response);
                     return false;
                 }
+                threadLocal.set(user);
                 return true;
             }
         }
@@ -95,8 +98,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private void responseError(HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=utf-8");
         PrintWriter out = response.getWriter();
-        out.write(JSON.toJSONString(BaseResult.create(BaseResult.create(ErrorCode.ACCOUNT_NOT_LOGIN))));
+        out.write(JSON.toJSONString(BaseResult.create(ErrorCode.ACCOUNT_NOT_LOGIN, "fail")));
         out.flush();
         out.close();
+    }
+
+    public static User getLoginUser() {
+        return threadLocal.get();
     }
 }

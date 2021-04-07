@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hcservice.common.ErrorCode;
 import com.hcservice.domain.model.Admin;
-import com.hcservice.domain.response.BaseResult;
+import com.hcservice.common.BaseResult;
 import com.hcservice.service.UserService;
 import com.hcservice.web.filter.UserFilterSecurityInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;

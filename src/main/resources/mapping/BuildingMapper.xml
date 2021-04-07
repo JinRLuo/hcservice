@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcservice.dao.BuildingMapper">
+    <resultMap id="BaseResultMap" type="com.hcservice.domain.model.Building">
+        <id column="BUILDING_ID" jdbcType="INTEGER" property="buildingId" />
+        <result column="BUILDING_NUM" jdbcType="INTEGER" property="buildingNum" />
+        <result column="BUILD_TIME" jdbcType="DATE" property="buildTime" />
+        <result column="MANAGER_NAME" jdbcType="VARCHAR" property="managerName" />
+        <result column="MANAGER_PHONE_NUM" jdbcType="VARCHAR" property="managerPhoneNum" />
+    </resultMap>
+    <select id="getBuildingById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select BUILDING_ID, BUILDING_NUM, BUILD_TIME, MANAGER_NAME, MANAGER_PHONE_NUM
+        from BUILDING_INFO
+        where BUILDING_ID = #{buildingId,jdbcType=INTEGER}
+    </select>
+
+</mapper>

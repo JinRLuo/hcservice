@@ -1,10 +1,11 @@
-package com.hcservice.common;
+package com.hcservice.common.utils;
 
 import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 public class StringUtil {
 
@@ -26,6 +27,11 @@ public class StringUtil {
         //加密字符串
         String newStr = base64en.encode(md5.digest(str.getBytes("utf-8")));
         return newStr;
+    }
+
+    public static String getUUID() {
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        return uuid;
     }
 
 }

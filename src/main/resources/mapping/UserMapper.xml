@@ -28,4 +28,14 @@
       #{phoneNum,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{pictureUrl,jdbcType=VARCHAR},
       #{status,jdbcType=INTEGER})
   </insert>
+    <update id="updateUserById" parameterType="com.hcservice.domain.model.User">
+    update USER_INFO
+    set USER_NAME = #{userName,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      PHONE_NUMBER = #{phoneNum,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      PICTURE_URL = #{pictureUrl,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER}
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </update>
 </mapper>

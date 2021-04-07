@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcservice.dao.RoomMapper">
+    <resultMap id="BaseResultMap" type="com.hcservice.domain.model.Room">
+        <id column="ROOM_ID" jdbcType="INTEGER" property="roomId" />
+        <result column="ROOM_NUM" jdbcType="VARCHAR" property="roomNum" />
+        <result column="BUILDING_NUM" jdbcType="VARCHAR" property="buildingNum" />
+        <result column="AREA" jdbcType="VARCHAR" property="area" />
+        <result column="STATUS" jdbcType="INTEGER" property="status" />
+<!--        <association property="owner" select="com.hcservice.dao.BuildingMapper.getBuildingById" column="BUILDING_ID" />-->
+        <association property="building" select="com.hcservice.dao.BuildingMapper.getBuildingById" column="BUILDING_ID" />
+    </resultMap>
+
+    <select id="getRoomById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select ROOM_ID, ROOM_NUM, STATUS, OWNER_ID, BUILDING_NUM, AREA, BUILDING_ID
+        from ROOM_INFO
+        where ROOM_ID = #{roomId,jdbcType=INTEGER}
+    </select>
+    <select id="getRoomByNum" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select ROOM_ID, ROOM_NUM, STATUS, OWNER_ID, BUILDING_NUM, AREA, BUILDING_ID
+        from ROOM_INFO
+        where ROOM_NUM = #{roomNum,jdbcType=INTEGER} and BUILDING_NUM = #{buildingNum,jdbcType=INTEGER}
+    </select>
+
+</mapper>

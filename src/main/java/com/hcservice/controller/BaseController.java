@@ -2,7 +2,7 @@ package com.hcservice.controller;
 
 import com.hcservice.common.BusinessException;
 import com.hcservice.common.ErrorCode;
-import com.hcservice.domain.response.BaseResult;
+import com.hcservice.common.BaseResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,7 +14,9 @@ import java.util.Map;
 
 public class BaseController {
 
-    public static final String CONTENT_TYPE_FORMED="application/x-www-form-urlencoded";
+    public static final String CONTENT_TYPE_URLENCODED ="application/x-www-form-urlencoded";
+    public static final String CONTENT_TYPE_FROM_DATA = "multipart/form-data";
+    public static final String CONTENT_TYPE_JSON = "application/json";
 
     //定义exceptionhandler解决未被controller层吸收的exception
     @ExceptionHandler(Exception.class)

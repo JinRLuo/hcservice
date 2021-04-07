@@ -1,27 +1,29 @@
 package com.hcservice.service;
 
+import com.hcservice.common.BusinessException;
 import com.hcservice.domain.model.Admin;
 import com.hcservice.domain.model.User;
-import com.hcservice.domain.response.BaseResult;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.hcservice.common.BaseResult;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
 public interface UserService extends UserDetailsService {
 
-    public Admin getAdminById(Integer adminId);
+    Admin getAdminById(Integer adminId);
 
-    public BaseResult adminRegister(Admin admin);
+    BaseResult adminRegister(Admin admin);
 
-    public BaseResult getOtp(String phoneNum);
+    BaseResult getOtp(String phoneNum);
 
-    public Boolean verityOtp(String phoneNum, String userOtpCode);
+    Boolean verityOtp(String phoneNum, String userOtpCode);
 
-    public BaseResult register(String phoneNum, String userName, String password);
+    BaseResult register(String phoneNum, String password);
 
-    public BaseResult login(String phoneNum);
+    User loginByPhoneNum(String phoneNum) throws BusinessException;
 
-    public User getUserByUserId(Integer userId);
+    User loginByPwd(String phoneNum, String password) throws BusinessException;
+
+    User getUserByUserId(Integer userId);
+
+    int updateUser(User user);
 
 }

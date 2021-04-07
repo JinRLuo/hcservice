@@ -1,10 +1,10 @@
 package com.hcservice;
 
 import com.hcservice.dao.AdminMapper;
+import com.hcservice.dao.BuildingMapper;
 import com.hcservice.dao.PermissionMapper;
-import com.hcservice.domain.model.Admin;
-import com.hcservice.domain.model.Permission;
-import com.hcservice.domain.model.Role;
+import com.hcservice.dao.RoomMapper;
+import com.hcservice.domain.model.*;
 import com.hcservice.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,12 @@ class HcserviceApplicationTests {
 
     @Autowired
     PermissionMapper permissionMapper;
+
+    @Autowired
+    BuildingMapper buildingMapper;
+
+    @Autowired
+    RoomMapper roomMapper;
 
     @Test
     void contextLoads() {
@@ -47,6 +53,20 @@ class HcserviceApplicationTests {
         Integer permissionId = 1;
         Permission permission = permissionMapper.getPermissionById(permissionId);
         System.out.println(permission);
+    }
+
+    @Test
+    void testBuildingMapper() {
+        Integer buildId = 2;
+        Building building = buildingMapper.getBuildingById(buildId);
+        System.out.println(building);
+    }
+
+    @Test
+    void testRoomMapper() {
+        Integer roomId = 15;
+        Room room = roomMapper.getRoomById(roomId);
+        System.out.println(room);
     }
 
 

@@ -1,5 +1,8 @@
 package com.hcservice.common;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ErrorCode {
 
     //通用错误类型1000
@@ -10,7 +13,7 @@ public enum ErrorCode {
 
     //20000开头为用户信息相关错误定义
     ACCOUNT_NOT_EXIST(20001,"用户不存在"),
-    ACCOUNT_LOGIN_FAIL(20002,"用户手机号或密码不正确"),
+    ACCOUNT_LOGIN_FAIL(20002,"手机号或密码不正确"),
     ACCOUNT_NOT_LOGIN(20003,"用户还未登录"),
     ACCOUNT_DISABLED(20004,"账户被禁用，请联系管理员!"),
     ACCOUNT_EXPIRED(20005,"账号过期，请联系管理员!"),
@@ -20,11 +23,14 @@ public enum ErrorCode {
     GET_OTP_CODE_FREQUENTLY(20009,"获取验证码太频繁"),
     PHONE_NUMBER_UNREGISTERED(20010,"该手机号未注册"),
     PHONE_NUMBER_HAS_BEEN_REGISTERED(20011,"该手机号已经被注册过了"),
+    IMAGE_CAN_NOT_BE_NULL(20012, "图片不能为空"),
+    IMAGE_FORMAT_ERROR(20013, "图片格式错误"),
+    IMAGE_UPDATE_ERROR(20014, "图片上传发生错误"),
 
 
 
-    //30000开头为交易信息错误定义
-    STOCK_NOT_ENOUGH(30001,"库存不足")
+    //30000开头为功能服务错误定义
+    ROOM_NUM_NOT_EXIST(30001,"该房间号不存在！")
     ;
 
     private int errCode;
