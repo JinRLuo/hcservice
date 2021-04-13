@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcservice.dao.NoticeMapper">
+    <resultMap id="BaseResultMap" type="com.hcservice.domain.model.Notice">
+        <id column="NOTICE_ID" jdbcType="INTEGER" property="noticeId" />
+        <result column="TITLE" jdbcType="VARCHAR" property="title" />
+        <result column="CONTENT" jdbcType="VARCHAR" property="content" />
+        <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+        <association property="admin" select="com.hcservice.dao.AdminMapper.selectByPrimaryKey" column="ADMIN_ID" />
+    </resultMap>
+
+    <select id="getAllNotice" resultMap="BaseResultMap">
+        select NOTICE_ID, TITLE, CONTENT, CREATE_DATE, ADMIN_ID
+        from NOTICE
+        order by CREATE_DATE desc
+    </select>
+
+</mapper>

@@ -1,18 +1,20 @@
 package com.hcservice.domain.model;
 
+import java.time.LocalDateTime;
+
 public class HomeOwner {
 
     private Integer ownerId;
 
     private String name;
 
-    private String sex;
-
     private String credentialType;
 
     private String credentialNum;
 
     private String phoneNum;
+
+    private LocalDateTime createTime;
 
     private User user;
 
@@ -34,14 +36,6 @@ public class HomeOwner {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
     }
 
     public String getCredentialType() {
@@ -66,6 +60,14 @@ public class HomeOwner {
 
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
     public User getUser() {

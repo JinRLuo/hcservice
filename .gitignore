@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@559adbb3/
+org.springframework.web.multipart
+org.springframework.web.multipart.support*

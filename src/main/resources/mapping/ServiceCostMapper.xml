@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcservice.dao.ServiceCostMapper">
+    <resultMap id="BaseResultMap" type="com.hcservice.domain.model.ServiceCost">
+        <id column="COST_ID" jdbcType="INTEGER" property="costId" />
+        <result column="TIME" jdbcType="TIMESTAMP" property="time" />
+        <result column="COST" jdbcType="INTEGER" property="cost" />
+        <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="STATUS" jdbcType="INTEGER" property="status" />
+        <association property="room" select="com.hcservice.dao.RoomMapper.getRoomById" column="ROOM_ID" />
+    </resultMap>
+
+    <select id="getNotPayServiceCostsByUserId" resultMap="BaseResultMap">
+        SELECT COST_ID, TIME, COST, CREATE_DATE, ROOM_ID, STATUS
+        FROM SERVICE_COST
+        WHERE STATUS = 0 AND ROOM_ID IN (
+            SELECT ri.ROOM_ID
+            FROM ROOM_INFO ri, HOMEOWNER_INFO hi
+            WHERE hi.USER_ID = #{userId,jdbcType=INTEGER} AND hi.OWNER_ID = ri.OWNER_ID
+        )
+    </select>
+
+    <select id="getServiceCostById" resultMap="BaseResultMap">
+        SELECT COST_ID, TIME, COST, CREATE_DATE, ROOM_ID, STATUS
+        FROM SERVICE_COST
+        WHERE COST_ID = #{costId,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateServiceCostById" parameterType="com.hcservice.domain.model.ServiceCost">
+    update SERVICE_COST
+    set
+        TIME = #{time,jdbcType=TIMESTAMP},
+        COST = #{cost,jdbcType=INTEGER},
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+        ROOM_ID = #{room.roomId,jdbcType=INTEGER},
+        STATUS = #{status,jdbcType=INTEGER}
+    where
+        COST_ID = #{costId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

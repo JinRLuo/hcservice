@@ -5,9 +5,16 @@ import com.hcservice.common.*;
 import com.hcservice.common.utils.DateUtil;
 import com.hcservice.common.utils.JwtUtil;
 import com.hcservice.common.utils.StringUtil;
+import com.hcservice.common.utils.TencentCOS;
 import com.hcservice.domain.VO.UserVO;
+import com.hcservice.domain.model.Complaint;
+import com.hcservice.domain.model.Notice;
 import com.hcservice.domain.model.User;
 import com.hcservice.common.BaseResult;
+import com.hcservice.domain.request.ComplaintRequest;
+import com.hcservice.domain.response.NoticeResponse;
+import com.hcservice.service.ComplaintService;
+import com.hcservice.service.NoticeService;
 import com.hcservice.service.UserService;
 import com.hcservice.web.interceptor.AuthenticationInterceptor;
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +29,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -33,8 +43,14 @@ public class UserController extends BaseController {
     @Autowired
     private UserService userService;
 
-    @Value("${img.location}")
-    private String systemImagePath;
+    @Autowired
+    private NoticeService noticeService;
+
+    @Autowired
+    private ComplaintService complaintService;
+
+    @Autowired
+    private TencentCOS tencentCOS;
 
     @RequestMapping(value = "/user/getOtp",method = {RequestMethod.POST},consumes = {CONTENT_TYPE_URLENCODED})
     public BaseResult getOtp(@RequestParam(name = "phoneNum") String phoneNum) {
@@ -123,61 +139,93 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/user/updateHeadImage",method = {RequestMethod.POST},consumes = {CONTENT_TYPE_FROM_DATA})
     public BaseResult<UserVO> updateImage(@RequestParam("image") MultipartFile multipartfile)  {
         User user = AuthenticationInterceptor.getLoginUser();
-        // 源文件名称
-        final String originalFileName = multipartfile.getOriginalFilename();
-        if (StringUtils.isBlank(originalFileName)) {
+
+        //获取文件的名称
+        String fileName = multipartfile.getOriginalFilename();
+        if (StringUtils.isBlank(fileName)) {
             return BaseResult.create(ErrorCode.IMAGE_CAN_NOT_BE_NULL, "fail");
         }
-
-        List<String> IMAGE_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png");
-        final String suffix = originalFileName.substring(originalFileName.lastIndexOf(".")).toLowerCase();
-        if (!IMAGE_EXTENSIONS.contains(suffix)) {
+        //判断有无后缀
+        if (fileName.lastIndexOf(".") < 0) {
             return BaseResult.create(ErrorCode.IMAGE_FORMAT_ERROR, "fail");
         }
 
-        String lastFilePath;
-        String newFileName = StringUtil.getUUID() + suffix;
-        String folderName = File.separator + "headImage" + File.separator;
-        String relativePath = folderName + DateUtil.getYYYYMMDD() + File.separator + DateUtil.getHH();
-        String filePath = systemImagePath + relativePath;
-        String fileUrl = null;
-        File targetFile = new File(filePath);
-        if (!targetFile.exists()) {
-            targetFile.mkdirs();
+        //获取文件后缀
+        String prefix = fileName.substring(fileName.lastIndexOf("."));
+
+        //如果不是图片
+        if (!prefix.equalsIgnoreCase(".jpg") && !prefix.equalsIgnoreCase(".jpeg") && !prefix.equalsIgnoreCase(".svg") && !prefix.equalsIgnoreCase(".gif") && !prefix.equalsIgnoreCase(".png")) {
+            return BaseResult.create(ErrorCode.IMAGE_FORMAT_ERROR, "fail");
         }
-        FileOutputStream out = null;
+        final File excelFile;
         try {
-            lastFilePath = filePath + File.separator + newFileName;
-            out = new FileOutputStream(lastFilePath);
-            out.write(multipartfile.getBytes());
-            fileUrl = relativePath + File.separator + newFileName;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            excelFile = File.createTempFile("imagesFile-" + System.currentTimeMillis(), prefix);
+            //将Multifile转换成File
+            multipartfile.transferTo(excelFile);
+        } catch (IOException e) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
         }
 
-        if (fileUrl == null) {
+        //调用腾讯云工具上传文件
+        String imageName = tencentCOS.uploadFile(excelFile, "headImage");
+
+        //程序结束时，删除临时文件
+        tencentCOS.deleteFile(excelFile);
+
+        if (imageName == null) {
             return BaseResult.create(ErrorCode.IMAGE_UPDATE_ERROR, "fail");
         }
-        user.setPictureUrl(fileUrl);
+        user.setPictureUrl(imageName);
         int res = userService.updateUser(user);
         if(res < 1) {
             return BaseResult.create(ErrorCode.UNKNOWN_ERROR,"fail");
         }
         UserVO userVO = convertUserVOFromUserModel(user);
         return BaseResult.create(userVO);
+    }
+
+
+    /**
+     * 用户查看小区公告接口
+     * @return
+     */
+    @UserLoginToken
+    @RequestMapping(value = "/user/getNotice",method = {RequestMethod.POST},consumes = {CONTENT_TYPE_URLENCODED})
+    public BaseResult<NoticeResponse> getNotice() {
+        List<Notice> notices = noticeService.getAllNotice();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        List<NoticeResponse> responses = notices.stream().map(notice -> {
+            NoticeResponse response = new NoticeResponse();
+            BeanUtils.copyProperties(notice, response);
+            response.setAdminName(notice.getAdmin().getAdminName());
+            response.setCreateDate(dtf.format(notice.getCreateDate()));
+            return response;
+        }).collect(Collectors.toList());
+        return BaseResult.create(responses);
+    }
+
+    /**
+     * 用户服务投诉接口
+     * @return
+     */
+    @UserLoginToken
+    @RequestMapping(value = "/user/complain",method = {RequestMethod.POST},consumes = {CONTENT_TYPE_URLENCODED})
+    public BaseResult complain(ComplaintRequest request) {
+        User user = AuthenticationInterceptor.getLoginUser();
+
+        if(StringUtils.isEmpty(request.getType()) || StringUtils.isEmpty(request.getContent())) {
+            return BaseResult.create(ErrorCode.PARAMETER_VALIDATION_ERROR);
+        }
+
+        Complaint complaint = new Complaint();
+        BeanUtils.copyProperties(request, complaint);
+        complaint.setCreateTime(LocalDateTime.now());
+        complaint.setUser(user);
+        int res = complaintService.addComplaint(complaint);
+        if(res < 1) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR,"fail");
+        }
+        return BaseResult.create(null);
     }
 
     private UserVO convertUserVOFromUserModel(User user) {

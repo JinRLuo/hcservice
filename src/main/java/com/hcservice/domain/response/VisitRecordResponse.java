@@ -1,10 +1,5 @@
 package com.hcservice.domain.response;
 
-import com.hcservice.domain.model.Room;
-import com.hcservice.domain.model.User;
-
-import java.time.LocalDateTime;
-
 public class VisitRecordResponse {
 
     private Integer visitorId;
@@ -13,9 +8,9 @@ public class VisitRecordResponse {
 
     private String visitorName;
 
-    private LocalDateTime visitTime;
+    private String visitTime;
 
-    private LocalDateTime createTime;
+    private String createTime;
 
     private String phoneNum;
 
@@ -54,19 +49,19 @@ public class VisitRecordResponse {
         this.visitorName = visitorName;
     }
 
-    public LocalDateTime getVisitTime() {
+    public String getVisitTime() {
         return visitTime;
     }
 
-    public void setVisitTime(LocalDateTime visitTime) {
+    public void setVisitTime(String visitTime) {
         this.visitTime = visitTime;
     }
 
-    public LocalDateTime getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

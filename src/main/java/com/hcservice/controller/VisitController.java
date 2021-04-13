@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 public class VisitController extends BaseController {
 
     @Autowired
-    VisitorService visitorService;
+    private VisitorService visitorService;
 
     @UserLoginToken
     @RequestMapping(value = "/user/getRecord",method = {RequestMethod.POST},consumes = {CONTENT_TYPE_URLENCODED})
@@ -36,6 +37,9 @@ public class VisitController extends BaseController {
             BeanUtils.copyProperties(record, response);
             response.setRoomNum(record.getRoom().getRoomNum());
             response.setBuildingNum(record.getRoom().getBuildingNum());
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            response.setCreateTime(dtf.format(record.getCreateTime()));
+            response.setVisitTime(dtf.format(record.getVisitTime()));
             return response;
         }).collect(Collectors.toList());
         return BaseResult.create(responses);

@@ -1,7 +1,10 @@
 package com.hcservice.domain.request;
 
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 
+@ToString
 public class SubscribeRequest {
 
     private String visitTime;

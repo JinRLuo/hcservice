@@ -14,7 +14,17 @@ public class StringUtil {
     }
 
     public static boolean verifyPassword(String password) {
-        if(password == null || password.length() < 8) {
+        if (password == null || password.length() < 8) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean verifyPlateNum(String plateNum) {
+        if (plateNum == null) {
+            return false;
+        }
+        if (!plateNum.matches("^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$")) {
             return false;
         }
         return true;

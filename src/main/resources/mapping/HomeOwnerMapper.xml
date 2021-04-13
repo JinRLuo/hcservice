@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcservice.dao.HomeOwnerMapper">
+    <resultMap id="BaseResultMap" type="com.hcservice.domain.model.HomeOwner">
+        <id column="OWNER_ID" jdbcType="INTEGER" property="ownerId" />
+        <result column="NAME" jdbcType="VARCHAR" property="name" />
+        <result column="CREDENTIAL_TYPE" jdbcType="VARCHAR" property="credentialType" />
+        <result column="CREDENTIAL_NUM" jdbcType="VARCHAR" property="credentialNum" />
+        <result column="PHONE_NUMBER" jdbcType="VARCHAR" property="phoneNum" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="STATUS" jdbcType="INTEGER" property="status" />
+        <association property="user" select="com.hcservice.dao.UserMapper.getUserByUserId" column="USER_ID" />
+        <association property="room" select="com.hcservice.dao.RoomMapper.getRoomById" column="ROOM_ID" />
+    </resultMap>
+    <resultMap id="SimpleResultMap" type="com.hcservice.domain.model.HomeOwner">
+        <id column="OWNER_ID" jdbcType="INTEGER" property="ownerId" />
+        <result column="NAME" jdbcType="VARCHAR" property="name" />
+        <result column="CREDENTIAL_TYPE" jdbcType="VARCHAR" property="credentialType" />
+        <result column="CREDENTIAL_NUM" jdbcType="VARCHAR" property="credentialNum" />
+        <result column="PHONE_NUMBER" jdbcType="VARCHAR" property="phoneNum" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="STATUS" jdbcType="INTEGER" property="status" />
+    </resultMap>
+
+    <select id="getHomeOwnerByOwnerId" parameterType="java.lang.Integer" resultMap="SimpleResultMap">
+        select OWNER_ID, NAME, CREDENTIAL_TYPE, CREDENTIAL_NUM, PHONE_NUMBER, CREATE_TIME, STATUS
+        from HOMEOWNER_INFO
+        where OWNER_ID = #{ownerId,jdbcType=INTEGER}
+    </select>
+
+    <insert id="insertHomeOwner" parameterType="com.hcservice.domain.model.HomeOwner">
+        insert into HOMEOWNER_INFO (OWNER_ID, NAME, CREDENTIAL_TYPE, CREDENTIAL_NUM, PHONE_NUMBER, CREATE_TIME, STATUS, USER_ID, ROOM_ID)
+        values (
+            #{ownerId,jdbcType=INTEGER},
+            #{name,jdbcType=VARCHAR},
+            #{credentialType,jdbcType=VARCHAR},
+            #{credentialNum,jdbcType=VARCHAR},
+            #{phoneNum,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{status,jdbcType=INTEGER},
+            #{user.userId,jdbcType=INTEGER},
+            #{room.roomId,jdbcType=INTEGER}
+        )
+    </insert>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcservice.dao.RepairMapper">
+    <resultMap id="BaseResultMap" type="com.hcservice.domain.model.Repair">
+        <id column="REPAIR_ID" jdbcType="INTEGER" property="repairId" />
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+        <result column="TYPE" jdbcType="VARCHAR" property="type" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="STATUS" jdbcType="INTEGER" property="status" />
+        <result column="IMG_URL" jdbcType="VARCHAR" property="imgUrl" />
+        <result column="FEEDBACK" jdbcType="VARCHAR" property="feedBack" />
+        <association property="user" select="com.hcservice.dao.UserMapper.getUserByUserId" column="USER_ID" />
+        <association property="admin" select="com.hcservice.dao.AdminMapper.selectByPrimaryKey" column="ADMIN_ID" />
+    </resultMap>
+
+    <select id="getRepairByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select REPAIR_ID, DESCRIPTION, TYPE, CREATE_TIME, STATUS, IMG_URL, FEEDBACK, USER_ID, ADMIN_ID
+        from REPAIR_INFO
+        WHERE USER_ID = #{userId,jdbcType=INTEGER}
+        order by CREATE_TIME desc
+    </select>
+    <insert id="insertRepair" parameterType="com.hcservice.domain.model.Repair">
+        insert into REPAIR_INFO (REPAIR_ID, DESCRIPTION, TYPE, CREATE_TIME, STATUS, IMG_URL, USER_ID)
+        values (
+            #{repairId,jdbcType=INTEGER},
+            #{description,jdbcType=VARCHAR},
+            #{type,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{status,jdbcType=VARCHAR},
+            #{imgUrl,jdbcType=VARCHAR},
+            #{user.userId,jdbcType=INTEGER}
+        )
+    </insert>
+
+</mapper>

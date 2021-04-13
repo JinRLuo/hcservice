@@ -32,7 +32,6 @@ public class BaseController {
             responseData.put("errCode", ErrorCode.UNKNOWN_ERROR.getErrCode());
             responseData.put("errMsg",ErrorCode.UNKNOWN_ERROR.getErrMsg());
         }
-
         return BaseResult.create(responseData,"fail");
     }
 

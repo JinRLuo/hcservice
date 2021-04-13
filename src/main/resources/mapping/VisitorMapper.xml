@@ -18,6 +18,7 @@
         select VISITOR_ID, PEOPLE_COUNT, VISITOR_NAME, VISIT_TIME, CREATE_TIME, PHONE_NUMBER, STATUS, VISITING_REASON, REMARK, ROOM_ID, USER_ID
         from VISITOR
         where USER_ID = #{userId,jdbcType=INTEGER}
+        order by CREATE_TIME desc
     </select>
     <insert id="insertVisitor" parameterType="com.hcservice.domain.model.Visitor">
     insert into VISITOR (VISITOR_ID, PEOPLE_COUNT, VISITOR_NAME, VISIT_TIME, CREATE_TIME, PHONE_NUMBER, STATUS, VISITING_REASON, REMARK, ROOM_ID, USER_ID)

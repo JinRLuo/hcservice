@@ -7,7 +7,7 @@
         <result column="BUILDING_NUM" jdbcType="VARCHAR" property="buildingNum" />
         <result column="AREA" jdbcType="VARCHAR" property="area" />
         <result column="STATUS" jdbcType="INTEGER" property="status" />
-<!--        <association property="owner" select="com.hcservice.dao.BuildingMapper.getBuildingById" column="BUILDING_ID" />-->
+        <association property="owner" select="com.hcservice.dao.HomeOwnerMapper.getHomeOwnerByOwnerId" column="OWNER_ID" />
         <association property="building" select="com.hcservice.dao.BuildingMapper.getBuildingById" column="BUILDING_ID" />
     </resultMap>
 
@@ -20,6 +20,11 @@
         select ROOM_ID, ROOM_NUM, STATUS, OWNER_ID, BUILDING_NUM, AREA, BUILDING_ID
         from ROOM_INFO
         where ROOM_NUM = #{roomNum,jdbcType=INTEGER} and BUILDING_NUM = #{buildingNum,jdbcType=INTEGER}
+    </select>
+    <select id="getRoomsByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select ri.ROOM_ID, ri.ROOM_NUM, ri.STATUS, ri.OWNER_ID, ri.BUILDING_NUM, ri.AREA, ri.BUILDING_ID
+        from ROOM_INFO ri, HOMEOWNER_INFO hi
+        where hi.USER_ID = #{userId,jdbcType=INTEGER} and ri.OWNER_ID = hi.OWNER_ID and hi.STATUS = 1
     </select>
 
 </mapper>

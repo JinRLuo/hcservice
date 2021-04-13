@@ -64,9 +64,9 @@ class HcserviceApplicationTests {
 
     @Test
     void testRoomMapper() {
-        Integer roomId = 15;
-        Room room = roomMapper.getRoomById(roomId);
-        System.out.println(room);
+        Integer userId = 4;
+        List<Room> rooms = roomMapper.getRoomsByUserId(userId);
+        System.out.println(rooms);
     }
 
 

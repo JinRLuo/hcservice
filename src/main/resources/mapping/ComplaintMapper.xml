@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcservice.dao.ComplaintMapper">
+    <resultMap id="BaseResultMap" type="com.hcservice.domain.model.Complaint">
+        <id column="COMPLAINT_ID" jdbcType="INTEGER" property="complaintId" />
+        <result column="TYPE" jdbcType="VARCHAR" property="type" />
+        <result column="CONTENT" jdbcType="VARCHAR" property="content" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <association property="user" select="com.hcservice.dao.UserMapper.getUserByUserId" column="USER_ID" />
+    </resultMap>
+
+    <insert id="insertComplaint" parameterType="com.hcservice.domain.model.Complaint">
+        insert into COMPLAINT (COMPLAINT_ID, TYPE, CONTENT, CREATE_TIME, USER_ID)
+        values (
+            #{complaintId,jdbcType=INTEGER},
+            #{type,jdbcType=VARCHAR},
+            #{content,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{user.userId,jdbcType=INTEGER}
+        )
+    </insert>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcservice.dao.CarMapper">
+    <resultMap id="BaseResultMap" type="com.hcservice.domain.model.Car">
+        <id column="CAR_ID" jdbcType="INTEGER" property="carId" />
+        <result column="TYPE" jdbcType="VARCHAR" property="type" />
+        <result column="BEGIN_TIME" jdbcType="TIMESTAMP" property="beginTime" />
+        <result column="END_TIME" jdbcType="TIMESTAMP" property="endTime" />
+        <result column="STATUS" jdbcType="INTEGER" property="status" />
+        <result column="PLATE_NUMBER" jdbcType="VARCHAR" property="plateNum" />
+        <association property="user" select="com.hcservice.dao.UserMapper.getUserByUserId" column="USER_ID" />
+    </resultMap>
+
+    <select id="getCarInfoByUserId" resultMap="BaseResultMap">
+        select CAR_ID, TYPE, BEGIN_TIME, END_TIME, STATUS, PLATE_NUMBER, USER_ID
+        from CAR
+        where USER_ID = #{userId,jdbcType=INTEGER}
+    </select>
+
+    <select id="getCarById" resultMap="BaseResultMap">
+        select CAR_ID, TYPE, BEGIN_TIME, END_TIME, STATUS, PLATE_NUMBER, USER_ID
+        from CAR
+        where CAR_ID = #{carId,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateCarById" parameterType="com.hcservice.domain.model.Car">
+    update CAR
+    set
+        TYPE = #{type,jdbcType=VARCHAR},
+        BEGIN_TIME = #{beginTime,jdbcType=TIMESTAMP},
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+        STATUS = #{status,jdbcType=VARCHAR},
+        PLATE_NUMBER = #{plateNum,jdbcType=VARCHAR},
+        USER_ID = #{user.userId,jdbcType=INTEGER}
+    where
+        CAR_ID = #{carId,jdbcType=INTEGER}
+  </update>
+
+    <insert id="insertCar" parameterType="com.hcservice.domain.model.Car">
+    insert into CAR (CAR_ID, TYPE, BEGIN_TIME, END_TIME, STATUS, PLATE_NUMBER, USER_ID)
+    values (
+        #{carId,jdbcType=INTEGER},
+        #{type,jdbcType=VARCHAR},
+        #{beginTime,jdbcType=TIMESTAMP},
+        #{endTime,jdbcType=TIMESTAMP},
+        #{status,jdbcType=INTEGER},
+        #{plateNum,jdbcType=VARCHAR},
+        #{user.userId,jdbcType=INTEGER}
+    )
+  </insert>
+
+
+</mapper>

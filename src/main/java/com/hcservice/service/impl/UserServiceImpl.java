@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User loginByPwd(String phoneNum, String password) throws BusinessException {
         User user = userMapper.getUserByPhoneNum(phoneNum);
-        if (user == null || user.getPassword().equals(password)) {
+        if (user == null || !user.getPassword().equals(password)) {
             throw new BusinessException(ErrorCode.ACCOUNT_LOGIN_FAIL);
         }
         return user;

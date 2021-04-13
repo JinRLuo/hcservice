@@ -30,7 +30,11 @@ public enum ErrorCode {
 
 
     //30000开头为功能服务错误定义
-    ROOM_NUM_NOT_EXIST(30001,"该房间号不存在！")
+    ROOM_NUM_NOT_EXIST(30001,"该房间号不存在！"),
+    ORDER_INFO_NOT_EXIST(30002, "订单信息不存在！"),
+    ORDER_INFO_ALREADY_PAID(30003, "订单已经完成！"),
+    ORDER_NOT_ACTIONABLE(30004,"订单不可操作！"),
+    SERVICE_COST_ALREADY_PAID(30005,"该月物业费已经缴清！")
     ;
 
     private int errCode;
