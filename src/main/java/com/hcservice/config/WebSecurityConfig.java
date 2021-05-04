@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/","/common/**","/*/user/**").permitAll()
+                .antMatchers("/","/common/**","/*/user/**","/druid/*","/jdbc/*").permitAll()
                 //anyRequest需要放在最后才不会报错 表示前面拦截剩下的请求
                 .anyRequest().authenticated()
                 .and()
@@ -119,7 +119,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/configuration/**",
                 "/swagger-resources/**",
                 "/swagger-ui.html",
-                "/webjars/**");
+                "/webjars/**",
+                "/druid/*",
+                "/jdbc/*");
     }
 
     @Override

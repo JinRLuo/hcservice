@@ -2,6 +2,7 @@ package com.hcservice.service.impl;
 
 import com.hcservice.common.BusinessException;
 import com.hcservice.common.ErrorCode;
+import com.hcservice.common.utils.SmsUtil;
 import com.hcservice.dao.AdminMapper;
 import com.hcservice.dao.UserMapper;
 import com.hcservice.domain.model.Admin;
@@ -22,13 +23,16 @@ import java.util.concurrent.TimeUnit;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    AdminMapper adminMapper;
+    private AdminMapper adminMapper;
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private SmsUtil smsUtil;
 
     @Override
     public Admin getAdminById(Integer adminId) {
@@ -43,7 +47,6 @@ public class UserServiceImpl implements UserService {
         } else {
             return admin;
         }
-
     }
 
     @Override
@@ -62,16 +65,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResult getOtp(String phoneNum) {
         //需要按照一定的规则生成OTP验证码
-        String otpCode = (String) redisTemplate.opsForValue().get(phoneNum);
-        if (otpCode != null) {
+        Long expire = redisTemplate.opsForValue().getOperations().getExpire(phoneNum);
+        if (expire > 240) {
             return BaseResult.create(ErrorCode.GET_OTP_CODE_FREQUENTLY, "fail");
         }
         Random random = new Random();
         int randomInt = random.nextInt(899999);
         randomInt += 100000;
-        otpCode = String.valueOf(randomInt);
+        String otpCode = String.valueOf(randomInt);
         //将OTP验证码同对应用户的手机号关联
-        redisTemplate.opsForValue().set(phoneNum, otpCode, 60, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(phoneNum, otpCode, 5, TimeUnit.MINUTES);
+        smsUtil.sendCode(phoneNum, "+86", otpCode, 933781);
         System.out.println("otpCode:" + phoneNum + " & " + otpCode);
         return BaseResult.create(phoneNum);
     }
@@ -113,8 +117,6 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ErrorCode.PHONE_NUMBER_UNREGISTERED);
         }
         return user;
-//        String token = JwtUtil.getToken(user);
-//        UserVO userVO = convertUserVOFromUserModel(user, token);
     }
 
     @Override
