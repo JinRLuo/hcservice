@@ -21,10 +21,10 @@ public class TencentCOS {
     @Value("${tencentcos.bucketName}")
     private String bucketName;
 
-    @Value("${TencentCOS.secretId}")
+    @Value("${tencentCOS.secretId}")
     private String secretId;
 
-    @Value("${TencentCOS.secretKey}")
+    @Value("${tencentCOS.secretKey}")
     private String secretKey;
 
     private COSCredentials cred;

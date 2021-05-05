@@ -9,7 +9,7 @@
     <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
     <result column="PICTURE_URL" jdbcType="VARCHAR" property="pictureUrl" />
     <result column="STATUS" jdbcType="BOOLEAN" property="status" />
-    <collection property="roles" ofType="com.hcservice.domain.model.Role" select="com.hcservice.dao.RoleMapper.getRolesByAdminId" column="ADMIN_ID" />
+    <collection property="roles" ofType="com.hcservice.domain.model.Role" select="com.hcservice.dao.RoleMapper.getRolesByAdminId" column="ADMIN_ID" fetchType="eager"/>
   </resultMap>
   <resultMap id="AdminResultMap" type="com.hcservice.domain.model.Admin">
     <id column="ADMIN_ID" jdbcType="INTEGER" property="adminId" />
@@ -24,7 +24,7 @@
     ADMIN_ID, ADMIN_NAME, EMAIL, PHONE_NUMBER, PASSWORD, PICTURE_URL, STATUS
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from ADMIN_INFO
     where ADMIN_ID = #{adminId,jdbcType=INTEGER}
@@ -49,7 +49,7 @@
       PHONE_NUMBER, PASSWORD, PICTURE_URL,
       STATUS)
     values (#{adminId,jdbcType=INTEGER}, #{adminName,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
-      #{phoneNumber,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{pictureUrl,jdbcType=VARCHAR}, 
+      #{phoneNumber,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{pictureUrl,jdbcType=VARCHAR},
       #{status,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.hcservice.domain.model.Admin">

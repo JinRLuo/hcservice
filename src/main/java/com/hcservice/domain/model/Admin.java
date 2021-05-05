@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@ToString
+
 public class Admin implements UserDetails {
 
     private Integer adminId;
@@ -28,10 +28,6 @@ public class Admin implements UserDetails {
     private boolean status;
 
     private List<Role> roles;
-
-    public List<Role> getRoles() {
-        return roles;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -67,6 +63,10 @@ public class Admin implements UserDetails {
     @Override
     public boolean isEnabled() {
         return status;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
     }
 
     public void setRoles(List<Role> roles) {
