@@ -1,10 +1,12 @@
 package com.hcservice.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.ToString;
 
 import java.util.List;
 
-@ToString
+@JsonIgnoreProperties(value = { "handler" })
 public class Role {
 
     private Integer roleId;

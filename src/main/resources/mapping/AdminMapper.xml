@@ -40,6 +40,11 @@
     FROM ADMIN_ROLE ar, ADMIN_INFO a
     WHERE ar.AID = a.ADMIN_ID AND ar.RID = #{ROLE_ID}
   </select>
+  <select id="getAllAdmins" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM ADMIN_INFO
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ADMIN_INFO
     where ADMIN_ID = #{adminId,jdbcType=INTEGER}

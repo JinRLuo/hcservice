@@ -1,10 +1,13 @@
 package com.hcservice.service;
 
+import com.github.pagehelper.PageInfo;
 import com.hcservice.common.BusinessException;
 import com.hcservice.domain.model.Admin;
 import com.hcservice.domain.model.User;
 import com.hcservice.common.BaseResult;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
@@ -25,5 +28,7 @@ public interface UserService extends UserDetailsService {
     User getUserByUserId(Integer userId);
 
     int updateUser(User user);
+
+    PageInfo<Admin> getAdminList(int pageNum, int pageSize);
 
 }

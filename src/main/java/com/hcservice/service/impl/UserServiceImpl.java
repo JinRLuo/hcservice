@@ -1,5 +1,7 @@
 package com.hcservice.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hcservice.common.BusinessException;
 import com.hcservice.common.ErrorCode;
 import com.hcservice.common.utils.SmsUtil;
@@ -16,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -136,5 +139,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public int updateUser(User user) {
         return userMapper.updateUserById(user);
+    }
+
+    @Override
+    public PageInfo<Admin> getAdminList(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Admin> admins = adminMapper.getAllAdmins();
+        PageInfo<Admin> pageInfo = new PageInfo<>(admins);
+        return pageInfo;
     }
 }

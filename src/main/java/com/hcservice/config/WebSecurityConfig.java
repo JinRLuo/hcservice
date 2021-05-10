@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/","/common/**","/*/user/**","/druid/*","/jdbc/*").permitAll()
+                .antMatchers("/","/admin/**","/*/user/**","/druid/*","/jdbc/*").permitAll()
                 //anyRequest需要放在最后才不会报错 表示前面拦截剩下的请求
                 .anyRequest().authenticated()
                 .and()
@@ -75,7 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     out.flush();
                     out.close();
                 })
-                .loginProcessingUrl("/common/login")
+                .loginProcessingUrl("/admin/login")
                 .usernameParameter("account")
                 .passwordParameter("password")
                 .permitAll()
@@ -85,7 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //注销
                 .logout()
-                .logoutUrl("/common/logout")
+                .logoutUrl("/admin/logout")
                 .logoutSuccessHandler((req, resp, authentication) -> {
                     resp.setContentType("application/json;charset=utf-8");
                     PrintWriter out = resp.getWriter();

@@ -2,6 +2,8 @@ package com.hcservice.dao;
 
 import com.hcservice.domain.model.User;
 
+import java.util.List;
+
 public interface UserMapper {
 
     int insertUser(User user);
