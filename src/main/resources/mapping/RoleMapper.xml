@@ -24,7 +24,7 @@
     ROLE_ID, ROLE_NAME, DETAIL
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from ROLE
     where ROLE_ID = #{roleId,jdbcType=INTEGER}
@@ -85,5 +85,13 @@
     update ROLE
     set ROLE_NAME = #{roleName,jdbcType=VARCHAR}
     where ROLE_ID = #{roleId,jdbcType=INTEGER}
+  </update>
+  <update id="deleteAdminRoleRelationByAdminId" parameterType="java.lang.Integer">
+    delete from ADMIN_ROLE
+    where AID = #{adminId,jdbcType=INTEGER}
+  </update>
+  <update id="addAdminRoleRelation" parameterType="java.lang.Integer">
+    insert into ADMIN_ROLE (AID, RID)
+    values (#{adminId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER})
   </update>
 </mapper>

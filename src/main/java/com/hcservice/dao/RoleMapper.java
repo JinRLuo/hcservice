@@ -22,4 +22,8 @@ public interface RoleMapper {
     int updateByPrimaryKeySelective(Role record);
 
     int updateByPrimaryKey(Role record);
+
+    int deleteAdminRoleRelationByAdminId(Integer adminId);
+
+    int addAdminRoleRelation(Integer adminId, Integer roleId);
 }

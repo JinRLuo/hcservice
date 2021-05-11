@@ -6,8 +6,10 @@ import com.hcservice.common.BusinessException;
 import com.hcservice.common.ErrorCode;
 import com.hcservice.common.utils.SmsUtil;
 import com.hcservice.dao.AdminMapper;
+import com.hcservice.dao.RoleMapper;
 import com.hcservice.dao.UserMapper;
 import com.hcservice.domain.model.Admin;
+import com.hcservice.domain.model.Role;
 import com.hcservice.domain.model.User;
 import com.hcservice.common.BaseResult;
 import com.hcservice.service.UserService;
@@ -17,7 +19,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -147,5 +154,29 @@ public class UserServiceImpl implements UserService {
         List<Admin> admins = adminMapper.getAllAdmins();
         PageInfo<Admin> pageInfo = new PageInfo<>(admins);
         return pageInfo;
+    }
+
+    @Override
+    @Transactional
+    public List<Role> modifyAdminRole(Integer adminId, Integer[] roleIds) {
+        roleMapper.deleteAdminRoleRelationByAdminId(adminId);
+        if (roleIds != null && roleIds.length != 0) {
+            Arrays.stream(roleIds).forEach(roleId -> {
+                roleMapper.addAdminRoleRelation(adminId, roleId);
+            });
+        }
+        List<Role> roles = roleMapper.getRolesByAdminId(adminId);
+        return roles;
+    }
+
+    @Override
+    @Transactional
+    public int modifyAccountStatus(Integer adminId, boolean status) {
+        Admin admin = adminMapper.selectByPrimaryKey(adminId);
+        if(admin == null) {
+            return 0;
+        }
+        admin.setStatus(status);
+        return adminMapper.updateByPrimaryKey(admin);
     }
 }

@@ -2,6 +2,7 @@ package com.hcservice.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.hcservice.common.ErrorCode;
 import com.hcservice.domain.model.Admin;
 import com.hcservice.common.BaseResult;
 import com.hcservice.domain.model.Role;
@@ -71,7 +72,42 @@ public class AdminController extends BaseController {
         return BaseResult.create(response);
     }
 
+    @RequestMapping(value = "/modifyAdminRole", method = {RequestMethod.POST})
+    public BaseResult<List<Role>> modifyAdminRole(Integer adminId, Integer[] roleIds) {
+        if (adminId == null) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        List<Role> roles = userService.modifyAdminRole(adminId, roleIds);
+        roles.stream().forEach(role -> {
+            role.setPermissions(null);
+            role.setAdmins(null);
+        });
+        return BaseResult.create(roles);
+    }
 
+    @RequestMapping(value = "/disableAccount", method = {RequestMethod.POST})
+    public BaseResult disableAccount(Integer adminId) {
+        if (adminId == null) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        int res = userService.modifyAccountStatus(adminId, false);
+        if (res < 1) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        return BaseResult.create(null);
+    }
+
+    @RequestMapping(value = "/freeAccount", method = {RequestMethod.POST})
+    public BaseResult freeAccount(Integer adminId) {
+        if (adminId == null) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        int res = userService.modifyAccountStatus(adminId, true);
+        if (res < 1) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        return BaseResult.create(null);
+    }
 
 
 }
