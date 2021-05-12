@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public BaseResult adminRegister(Admin admin) {
         Admin am = adminMapper.getAdminByName(admin.getAdminName());
         if (am != null) {
@@ -149,9 +150,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageInfo<Admin> getAdminList(int pageNum, int pageSize) {
+    public PageInfo<Admin> getAdminListByPage(String searchAccount, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Admin> admins = adminMapper.getAllAdmins();
+        List<Admin> admins = adminMapper.getAdminsBySearch(searchAccount);
         PageInfo<Admin> pageInfo = new PageInfo<>(admins);
         return pageInfo;
     }

@@ -45,6 +45,12 @@
     <include refid="Base_Column_List" />
     FROM ADMIN_INFO
   </select>
+  <select id="getAdminsBySearch" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM ADMIN_INFO
+    WHERE ADMIN_NAME LIKE #{searchAccount,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ADMIN_INFO
     where ADMIN_ID = #{adminId,jdbcType=INTEGER}

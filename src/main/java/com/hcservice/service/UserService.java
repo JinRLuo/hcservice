@@ -30,7 +30,7 @@ public interface UserService extends UserDetailsService {
 
     int updateUser(User user);
 
-    PageInfo<Admin> getAdminList(int pageNum, int pageSize);
+    PageInfo<Admin> getAdminListByPage(String searchAccount, int pageNum, int pageSize);
 
     List<Role> modifyAdminRole(Integer adminId, Integer[] roleIds);
 

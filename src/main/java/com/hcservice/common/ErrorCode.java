@@ -9,6 +9,7 @@ public enum ErrorCode {
     PARAMETER_VALIDATION_ERROR(10001,"参数不合法"),
     UNKNOWN_ERROR(10002,"未知错误"),
     PHONE_FORMAT_ERROR(10003,"手机号格式错误"),
+    PERMISSION_DENIED(10004, "权限不足"),
 
 
     //20000开头为用户信息相关错误定义

@@ -3,12 +3,14 @@ package com.hcservice.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hcservice.common.ErrorCode;
+import com.hcservice.common.utils.StringUtil;
 import com.hcservice.domain.model.Admin;
 import com.hcservice.common.BaseResult;
 import com.hcservice.domain.model.Role;
 import com.hcservice.domain.response.AdminInfoResponse;
 import com.hcservice.domain.response.ListByPageResponse;
 import com.hcservice.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,22 +36,32 @@ public class AdminController extends BaseController {
     }
 
     @RequestMapping(value = "/register", method = {RequestMethod.POST})
-    public BaseResult register(String account, String email, String phoneNumber, String password) {
+    public BaseResult register(String account, String email, String phoneNum) {
+        if(StringUtils.isAnyEmpty(account, email, phoneNum)) {
+            return BaseResult.create(ErrorCode.PARAMETER_VALIDATION_ERROR, "fail");
+        }
         Admin admin = new Admin();
         admin.setAdminName(account);
         admin.setEmail(email);
-        admin.setPhoneNumber(phoneNumber);
+        admin.setPhoneNumber(phoneNum);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        admin.setPassword(passwordEncoder.encode(password));
+        admin.setPassword(passwordEncoder.encode("1234"));
         admin.setPictureUrl("/img/1.img");
         admin.setStatus(true);
         return userService.adminRegister(admin);
     }
 
     @RequestMapping(value = "/getAccountList", method = {RequestMethod.POST})
-    public BaseResult<ListByPageResponse<AdminInfoResponse>> getAccountList(Integer pageNum, Integer pageSize) {
+    public BaseResult<ListByPageResponse<AdminInfoResponse>> getAccountList(String searchAccount, Integer pageNum, Integer pageSize) {
+        if (pageNum == null || pageSize == null) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        if (searchAccount == null) {
+            searchAccount = "";
+        }
+        searchAccount = "%" + searchAccount + "%";
         ListByPageResponse<AdminInfoResponse> response = new ListByPageResponse<>();
-        PageInfo<Admin> pageInfos = userService.getAdminList(pageNum, pageSize);
+        PageInfo<Admin> pageInfos = userService.getAdminListByPage(searchAccount, pageNum, pageSize);
         response.setPageNum(pageInfos.getPageNum());
         response.setPageSize(pageInfos.getPageSize());
         response.setTotal(pageInfos.getTotal());
