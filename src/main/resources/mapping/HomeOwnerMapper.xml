@@ -9,7 +9,7 @@
         <result column="PHONE_NUMBER" jdbcType="VARCHAR" property="phoneNum" />
         <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
         <result column="STATUS" jdbcType="INTEGER" property="status" />
-        <association property="user" select="com.hcservice.dao.UserMapper.getUserByUserId" column="USER_ID" />
+<!--        <association property="user" select="com.hcservice.dao.UserMapper.getUserByUserId" column="USER_ID" />-->
         <association property="room" select="com.hcservice.dao.RoomMapper.getRoomById" column="ROOM_ID" />
     </resultMap>
     <resultMap id="SimpleResultMap" type="com.hcservice.domain.model.HomeOwner">
@@ -26,6 +26,12 @@
         select OWNER_ID, NAME, CREDENTIAL_TYPE, CREDENTIAL_NUM, PHONE_NUMBER, CREATE_TIME, STATUS
         from HOMEOWNER_INFO
         where OWNER_ID = #{ownerId,jdbcType=INTEGER}
+    </select>
+
+    <select id="getHomeOwnersByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select OWNER_ID, NAME, CREDENTIAL_TYPE, CREDENTIAL_NUM, PHONE_NUMBER, CREATE_TIME, USER_ID, ROOM_ID, STATUS
+        from HOMEOWNER_INFO
+        where USER_ID = #{userId,jdbcType=INTEGER} AND STATUS = 1
     </select>
 
     <insert id="insertHomeOwner" parameterType="com.hcservice.domain.model.HomeOwner">

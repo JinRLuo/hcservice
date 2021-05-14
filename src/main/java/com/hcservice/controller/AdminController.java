@@ -9,6 +9,7 @@ import com.hcservice.common.BaseResult;
 import com.hcservice.domain.model.Role;
 import com.hcservice.domain.response.AdminInfoResponse;
 import com.hcservice.domain.response.ListByPageResponse;
+import com.hcservice.domain.response.UserInfoResponse;
 import com.hcservice.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,8 @@ public class AdminController extends BaseController {
         return userService.adminRegister(admin);
     }
 
-    @RequestMapping(value = "/getAccountList", method = {RequestMethod.POST})
-    public BaseResult<ListByPageResponse<AdminInfoResponse>> getAccountList(String searchAccount, Integer pageNum, Integer pageSize) {
+    @RequestMapping(value = "/getAdminInfoList", method = {RequestMethod.POST})
+    public BaseResult<ListByPageResponse<AdminInfoResponse>> getAdminInfoList(String searchAccount, Integer pageNum, Integer pageSize) {
         if (pageNum == null || pageSize == null) {
             return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
         }
@@ -81,6 +82,19 @@ public class AdminController extends BaseController {
             return adminInfo;
         }).collect(Collectors.toList());
         response.setList(admins);
+        return BaseResult.create(response);
+    }
+
+    @RequestMapping(value = "/getUserInfoList", method = {RequestMethod.POST})
+    public BaseResult<ListByPageResponse<UserInfoResponse>> getUserInfoList(String searchUserName, Integer pageNum, Integer pageSize) {
+        if (pageNum == null || pageSize == null) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        if (searchUserName == null) {
+            searchUserName = "";
+        }
+        searchUserName = "%" + searchUserName + "%";
+        ListByPageResponse<UserInfoResponse> response = userService.getUserInfoByPage(searchUserName, pageNum, pageSize);
         return BaseResult.create(response);
     }
 

@@ -6,14 +6,20 @@ import com.hcservice.common.BusinessException;
 import com.hcservice.common.ErrorCode;
 import com.hcservice.common.utils.SmsUtil;
 import com.hcservice.dao.AdminMapper;
+import com.hcservice.dao.HomeOwnerMapper;
 import com.hcservice.dao.RoleMapper;
 import com.hcservice.dao.UserMapper;
 import com.hcservice.domain.model.Admin;
+import com.hcservice.domain.model.HomeOwner;
 import com.hcservice.domain.model.Role;
 import com.hcservice.domain.model.User;
 import com.hcservice.common.BaseResult;
+import com.hcservice.domain.response.HomeOwnerInfoResponse;
+import com.hcservice.domain.response.ListByPageResponse;
+import com.hcservice.domain.response.UserInfoResponse;
 import com.hcservice.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,10 +27,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,6 +46,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleMapper roleMapper;
+
+    @Autowired
+    private HomeOwnerMapper homeOwnerMapper;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -155,6 +167,35 @@ public class UserServiceImpl implements UserService {
         List<Admin> admins = adminMapper.getAdminsBySearch(searchAccount);
         PageInfo<Admin> pageInfo = new PageInfo<>(admins);
         return pageInfo;
+    }
+
+    @Override
+    public ListByPageResponse<UserInfoResponse> getUserInfoByPage(String searchUserName, int pageNum, int pageSize) {
+        ListByPageResponse<UserInfoResponse> response = new ListByPageResponse<>();
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> users = userMapper.getUsersBySearch(searchUserName);
+        PageInfo<User> pageInfo = new PageInfo<>(users);
+        response.setPageNum(pageInfo.getPageNum());
+        response.setPageSize(pageInfo.getPageSize());
+        response.setTotal(pageInfo.getTotal());
+        List<User> usersByPage = pageInfo.getList();
+        List<UserInfoResponse> userInfos = usersByPage.stream().map(user -> {
+            UserInfoResponse userInfo = new UserInfoResponse();
+            BeanUtils.copyProperties(user, userInfo);
+            List<HomeOwner> owners = homeOwnerMapper.getHomeOwnersByUserId(user.getUserId());
+            List<HomeOwnerInfoResponse> homeOwnerInfoResponses = owners.stream().map(homeOwner -> {
+                HomeOwnerInfoResponse homeOwnerInfoResponse = new HomeOwnerInfoResponse();
+                BeanUtils.copyProperties(homeOwner, homeOwnerInfoResponse);
+                BeanUtils.copyProperties(homeOwner.getRoom(), homeOwnerInfoResponse);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                homeOwnerInfoResponse.setCreateTime(dtf.format(homeOwner.getCreateTime()));
+                return homeOwnerInfoResponse;
+            }).collect(Collectors.toList());
+            userInfo.setHomeOwners(homeOwnerInfoResponses);
+            return userInfo;
+        }).collect(Collectors.toList());
+        response.setList(userInfos);
+        return response;
     }
 
     @Override

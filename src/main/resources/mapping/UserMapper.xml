@@ -20,6 +20,11 @@
         from USER_INFO
         where PHONE_NUMBER = #{phoneNum,jdbcType=VARCHAR}
     </select>
+    <select id="getUsersBySearch" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select USER_ID, USER_NAME, EMAIL, PHONE_NUMBER, PASSWORD, PICTURE_URL, STATUS
+        from USER_INFO
+        where USER_NAME LIKE #{searchAccount,jdbcType=VARCHAR}
+    </select>
     <insert id="insertUser" parameterType="com.hcservice.domain.model.User">
     insert into USER_INFO (USER_NAME, EMAIL,
       PHONE_NUMBER, PASSWORD, PICTURE_URL,

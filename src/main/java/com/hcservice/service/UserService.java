@@ -6,6 +6,8 @@ import com.hcservice.domain.model.Admin;
 import com.hcservice.domain.model.Role;
 import com.hcservice.domain.model.User;
 import com.hcservice.common.BaseResult;
+import com.hcservice.domain.response.ListByPageResponse;
+import com.hcservice.domain.response.UserInfoResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -31,6 +33,8 @@ public interface UserService extends UserDetailsService {
     int updateUser(User user);
 
     PageInfo<Admin> getAdminListByPage(String searchAccount, int pageNum, int pageSize);
+
+    ListByPageResponse<UserInfoResponse> getUserInfoByPage(String searchUserName, int pageNum, int pageSize);
 
     List<Role> modifyAdminRole(Integer adminId, Integer[] roleIds);
 
