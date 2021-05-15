@@ -86,15 +86,15 @@ public class AdminController extends BaseController {
     }
 
     @RequestMapping(value = "/getUserInfoList", method = {RequestMethod.POST})
-    public BaseResult<ListByPageResponse<UserInfoResponse>> getUserInfoList(String searchUserName, Integer pageNum, Integer pageSize) {
+    public BaseResult<ListByPageResponse<UserInfoResponse>> getUserInfoList(String searchPhoneNum, Integer pageNum, Integer pageSize) {
         if (pageNum == null || pageSize == null) {
             return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
         }
-        if (searchUserName == null) {
-            searchUserName = "";
+        if (searchPhoneNum == null) {
+            searchPhoneNum = "";
         }
-        searchUserName = "%" + searchUserName + "%";
-        ListByPageResponse<UserInfoResponse> response = userService.getUserInfoByPage(searchUserName, pageNum, pageSize);
+        searchPhoneNum = "%" + searchPhoneNum + "%";
+        ListByPageResponse<UserInfoResponse> response = userService.getUserInfoByPage(searchPhoneNum, pageNum, pageSize);
         return BaseResult.create(response);
     }
 
@@ -111,8 +111,8 @@ public class AdminController extends BaseController {
         return BaseResult.create(roles);
     }
 
-    @RequestMapping(value = "/disableAccount", method = {RequestMethod.POST})
-    public BaseResult disableAccount(Integer adminId) {
+    @RequestMapping(value = "/disableAdminAccount", method = {RequestMethod.POST})
+    public BaseResult disableAdminAccount(Integer adminId) {
         if (adminId == null) {
             return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
         }
@@ -123,12 +123,36 @@ public class AdminController extends BaseController {
         return BaseResult.create(null);
     }
 
-    @RequestMapping(value = "/freeAccount", method = {RequestMethod.POST})
-    public BaseResult freeAccount(Integer adminId) {
+    @RequestMapping(value = "/freeAdminAccount", method = {RequestMethod.POST})
+    public BaseResult freeAdminAccount(Integer adminId) {
         if (adminId == null) {
             return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
         }
         int res = userService.modifyAccountStatus(adminId, true);
+        if (res < 1) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        return BaseResult.create(null);
+    }
+
+    @RequestMapping(value = "/disableUserAccount", method = {RequestMethod.POST})
+    public BaseResult disableUserAccount(Integer userId) {
+        if (userId == null) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        int res = userService.modifyUserStatus(userId, 0);
+        if (res < 1) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        return BaseResult.create(null);
+    }
+
+    @RequestMapping(value = "/freeUserAccount", method = {RequestMethod.POST})
+    public BaseResult freeUserAccount(Integer userId) {
+        if (userId == null) {
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        int res = userService.modifyUserStatus(userId, 1);
         if (res < 1) {
             return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
         }

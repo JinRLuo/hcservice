@@ -2,7 +2,6 @@ package com.hcservice.controller;
 
 import com.hcservice.annotation.UserLoginToken;
 import com.hcservice.common.*;
-import com.hcservice.common.utils.DateUtil;
 import com.hcservice.common.utils.JwtUtil;
 import com.hcservice.common.utils.StringUtil;
 import com.hcservice.common.utils.TencentCOS;
@@ -20,18 +19,15 @@ import com.hcservice.web.interceptor.AuthenticationInterceptor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

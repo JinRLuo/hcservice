@@ -170,10 +170,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ListByPageResponse<UserInfoResponse> getUserInfoByPage(String searchUserName, int pageNum, int pageSize) {
+    public ListByPageResponse<UserInfoResponse> getUserInfoByPage(String searchPhoneNum, int pageNum, int pageSize) {
         ListByPageResponse<UserInfoResponse> response = new ListByPageResponse<>();
         PageHelper.startPage(pageNum, pageSize);
-        List<User> users = userMapper.getUsersBySearch(searchUserName);
+        List<User> users = userMapper.getUsersBySearch(searchPhoneNum);
         PageInfo<User> pageInfo = new PageInfo<>(users);
         response.setPageNum(pageInfo.getPageNum());
         response.setPageSize(pageInfo.getPageSize());
@@ -220,5 +220,16 @@ public class UserServiceImpl implements UserService {
         }
         admin.setStatus(status);
         return adminMapper.updateByPrimaryKey(admin);
+    }
+
+    @Override
+    @Transactional
+    public int modifyUserStatus(Integer userId, Integer status) {
+        User user = userMapper.getUserByUserId(userId);
+        if(user == null) {
+            return 0;
+        }
+        user.setStatus(status);
+        return userMapper.updateUserById(user);
     }
 }

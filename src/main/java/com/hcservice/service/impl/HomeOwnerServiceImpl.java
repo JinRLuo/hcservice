@@ -12,6 +12,7 @@ import com.hcservice.service.HomeOwnerService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,5 +44,16 @@ public class HomeOwnerServiceImpl implements HomeOwnerService {
     @Override
     public List<Room> getRoomsByUserId(Integer userId) {
         return roomMapper.getRoomsByUserId(userId);
+    }
+
+    @Override
+    public List<HomeOwner> getBindRequest() {
+        return homeOwnerMapper.getNewHomeOwner();
+    }
+
+    @Override
+    @Transactional
+    public int auditHouse(Integer ownerId, Integer status) {
+        return homeOwnerMapper.updateHomeOwnerStatusByOwnerId(ownerId, status);
     }
 }

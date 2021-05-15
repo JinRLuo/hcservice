@@ -9,7 +9,7 @@
         <result column="PHONE_NUMBER" jdbcType="VARCHAR" property="phoneNum" />
         <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
         <result column="STATUS" jdbcType="INTEGER" property="status" />
-<!--        <association property="user" select="com.hcservice.dao.UserMapper.getUserByUserId" column="USER_ID" />-->
+        <association property="user" select="com.hcservice.dao.UserMapper.getUserByUserId" column="USER_ID" />
         <association property="room" select="com.hcservice.dao.RoomMapper.getRoomById" column="ROOM_ID" />
     </resultMap>
     <resultMap id="SimpleResultMap" type="com.hcservice.domain.model.HomeOwner">
@@ -32,7 +32,20 @@
         select OWNER_ID, NAME, CREDENTIAL_TYPE, CREDENTIAL_NUM, PHONE_NUMBER, CREATE_TIME, USER_ID, ROOM_ID, STATUS
         from HOMEOWNER_INFO
         where USER_ID = #{userId,jdbcType=INTEGER} AND STATUS = 1
+        ORDER BY CREATE_TIME
     </select>
+
+    <select id="getNewHomeOwner" resultMap="BaseResultMap">
+        select OWNER_ID, NAME, CREDENTIAL_TYPE, CREDENTIAL_NUM, PHONE_NUMBER, CREATE_TIME, USER_ID, ROOM_ID, STATUS
+        from HOMEOWNER_INFO
+        where STATUS = 0
+    </select>
+
+    <update id="updateHomeOwnerStatusByOwnerId" parameterType="java.lang.Integer">
+        update HOMEOWNER_INFO
+        set STATUS = #{status, jdbcType=INTEGER}
+        WHERE OWNER_ID = #{ownerId, jdbcType=INTEGER}
+    </update>
 
     <insert id="insertHomeOwner" parameterType="com.hcservice.domain.model.HomeOwner">
         insert into HOMEOWNER_INFO (OWNER_ID, NAME, CREDENTIAL_TYPE, CREDENTIAL_NUM, PHONE_NUMBER, CREATE_TIME, STATUS, USER_ID, ROOM_ID)

@@ -14,6 +14,6 @@ public interface UserMapper {
 
     int updateUserById(User user);
 
-    List<User> getUsersBySearch(String searchAccount);
+    List<User> getUsersBySearch(String searchPhoneNum);
 
 }

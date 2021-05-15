@@ -40,4 +40,6 @@ public interface UserService extends UserDetailsService {
 
     int modifyAccountStatus(Integer adminId, boolean status);
 
+    int modifyUserStatus(Integer userId, Integer status);
+
 }

@@ -15,4 +15,20 @@
         order by CREATE_DATE desc
     </select>
 
+    <insert id="insertNotice" parameterType="com.hcservice.domain.model.Notice">
+        insert into
+            NOTICE (TITLE, CONTENT, CREATE_DATE, ADMIN_ID)
+        values (
+            #{title,jdbcType=VARCHAR},
+            #{content,jdbcType=VARCHAR},
+            #{createDate,jdbcType=TIMESTAMP},
+            #{admin.adminId,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <update id="deleteNotice" parameterType="java.lang.Integer">
+        delete from NOTICE
+        where NOTICE_ID = #{noticeId,jdbcType=INTEGER}
+    </update>
+
 </mapper>

@@ -8,4 +8,8 @@ public interface NoticeMapper {
 
     List<Notice> getAllNotice();
 
+    int insertNotice(Notice notice);
+
+    int deleteNotice(Integer noticeId);
+
 }

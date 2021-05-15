@@ -8,8 +8,12 @@ public interface HomeOwnerMapper {
 
     HomeOwner getHomeOwnerByOwnerId(Integer ownerId);
 
+    int updateHomeOwnerStatusByOwnerId(Integer ownerId, Integer status);
+
     int insertHomeOwner(HomeOwner homeOwner);
 
     List<HomeOwner> getHomeOwnersByUserId(Integer userId);
+
+    List<HomeOwner> getNewHomeOwner();
 
 }
