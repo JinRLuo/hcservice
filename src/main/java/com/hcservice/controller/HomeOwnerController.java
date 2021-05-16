@@ -10,10 +10,8 @@ import com.hcservice.common.ErrorCode;
 import com.hcservice.dao.RoomMapper;
 import com.hcservice.domain.model.*;
 import com.hcservice.domain.request.BindHomeOwnerInfoRequest;
-import com.hcservice.domain.response.BindHouseInfoResponse;
-import com.hcservice.domain.response.HomeOwnerInfoResponse;
-import com.hcservice.domain.response.ListByPageResponse;
-import com.hcservice.domain.response.NoticeResponse;
+import com.hcservice.domain.response.*;
+import com.hcservice.service.ComplaintService;
 import com.hcservice.service.HomeOwnerService;
 import com.hcservice.service.NoticeService;
 import com.hcservice.web.interceptor.AuthenticationInterceptor;
@@ -41,6 +39,9 @@ public class HomeOwnerController extends BaseController {
 
     @Autowired
     private NoticeService noticeService;
+
+    @Autowired
+    private ComplaintService complaintService;
 
     @UserLoginToken
     @RequestMapping(value = "/user/bindHomeOwnerInfo", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_URLENCODED})
@@ -153,5 +154,27 @@ public class HomeOwnerController extends BaseController {
             return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
         }
         return BaseResult.create(null);
+    }
+
+    @RequestMapping(value = "/getComplaintInfo",method = {RequestMethod.POST},consumes = {CONTENT_TYPE_URLENCODED})
+    public BaseResult<ListByPageResponse<ComplaintInfoResponse>> getComplaintInfo(Integer pageNum, Integer pageSize) {
+        if(pageNum == null || pageSize == null) {
+            return BaseResult.create(ErrorCode.PARAMETER_VALIDATION_ERROR, "fail");
+        }
+        ListByPageResponse<ComplaintInfoResponse> response = new ListByPageResponse<>();
+        PageInfo<Complaint> pageInfo = complaintService.getComplaintByPage(pageNum, pageSize);
+        response.setPageNum(pageInfo.getPageNum());
+        response.setPageSize(pageInfo.getPageSize());
+        response.setTotal(pageInfo.getTotal());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        List<ComplaintInfoResponse> list = pageInfo.getList().stream().map(complaint -> {
+            ComplaintInfoResponse complaintInfoResponse = new ComplaintInfoResponse();
+            BeanUtils.copyProperties(complaint, complaintInfoResponse);
+            complaintInfoResponse.setCreateTime(dtf.format(complaint.getCreateTime()));
+            complaintInfoResponse.setPhoneNum(complaint.getUser().getPhoneNum());
+            return complaintInfoResponse;
+        }).collect(Collectors.toList());
+        response.setList(list);
+        return BaseResult.create(response);
     }
 }

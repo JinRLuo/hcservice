@@ -19,4 +19,9 @@
             #{user.userId,jdbcType=INTEGER}
         )
     </insert>
+
+    <select id="getAllComplaint" resultMap="BaseResultMap">
+        select *
+        from COMPLAINT
+    </select>
 </mapper>
