@@ -31,5 +31,30 @@
             #{user.userId,jdbcType=INTEGER}
         )
     </insert>
+    <select id="getAllRepairRecord" resultMap="BaseResultMap">
+        select REPAIR_ID, DESCRIPTION, TYPE, CREATE_TIME, STATUS, IMG_URL, FEEDBACK, USER_ID, ADMIN_ID
+        from REPAIR_INFO
+        order by CREATE_TIME desc
+    </select>
+    <select id="getRepairRecordByStatus" resultMap="BaseResultMap">
+        select REPAIR_ID, DESCRIPTION, TYPE, CREATE_TIME, STATUS, IMG_URL, FEEDBACK, USER_ID, ADMIN_ID
+        from REPAIR_INFO
+        where STATUS = #{status,jdbcType=INTEGER}
+        order by CREATE_TIME desc
+    </select>
+    <select id="getRepairById" resultMap="BaseResultMap">
+        select REPAIR_ID, DESCRIPTION, TYPE, CREATE_TIME, STATUS, IMG_URL, FEEDBACK, USER_ID, ADMIN_ID
+        from REPAIR_INFO
+        where REPAIR_ID = #{repairId,jdbcType=INTEGER}
+    </select>
+    <update id="updateRepairFeedback" parameterType="com.hcservice.domain.model.Repair">
+        update
+            REPAIR_INFO
+        set
+            STATUS = #{status,jdbcType=INTEGER},
+            ADMIN_ID = #{admin.adminId,jdbcType=INTEGER},
+            FEEDBACK = #{feedBack,jdbcType=VARCHAR}
+        where REPAIR_ID = #{repairId,jdbcType=INTEGER}
+    </update>
 
 </mapper>

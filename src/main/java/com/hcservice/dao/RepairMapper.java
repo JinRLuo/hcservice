@@ -10,4 +10,12 @@ public interface RepairMapper {
 
     int insertRepair(Repair repair);
 
+    List<Repair> getAllRepairRecord();
+
+    List<Repair> getRepairRecordByStatus(Integer status);
+
+    Repair getRepairById(Integer repairId);
+
+    int updateRepairFeedback(Repair repair);
+
 }
