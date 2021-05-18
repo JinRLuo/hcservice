@@ -9,4 +9,8 @@ public interface VisitorMapper {
     List<Visitor> getVisitorByUserId(Integer userId);
 
     int insertVisitor(Visitor visitor);
+
+    List<Visitor> getVisitorBySearch(String search);
+
+    int updateVisitorStatus(Integer visitorId);
 }

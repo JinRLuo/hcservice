@@ -23,6 +23,12 @@
         where CAR_ID = #{carId,jdbcType=INTEGER}
     </select>
 
+    <select id="getCarInfoBySearch" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select CAR_ID, TYPE, BEGIN_TIME, END_TIME, STATUS, PLATE_NUMBER, USER_ID
+        from CAR
+        where PLATE_NUMBER LIKE #{search,jdbcType=VARCHAR}
+    </select>
+
     <update id="updateCarById" parameterType="com.hcservice.domain.model.Car">
     update CAR
     set

@@ -1,9 +1,13 @@
 package com.hcservice.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.hcservice.annotation.UserLoginToken;
 import com.hcservice.common.BaseResult;
+import com.hcservice.common.ErrorCode;
 import com.hcservice.domain.model.ServiceCost;
 import com.hcservice.domain.model.User;
+import com.hcservice.domain.response.ListByPageResponse;
+import com.hcservice.domain.response.ServiceCostRecordAdminResponse;
 import com.hcservice.domain.response.ServiceCostRecordResponse;
 import com.hcservice.service.ServiceCostService;
 import com.hcservice.web.interceptor.AuthenticationInterceptor;
@@ -40,5 +44,39 @@ public class ServiceCostController extends BaseController {
         }).collect(Collectors.toList());
         return BaseResult.create(responses);
     }
+
+    @RequestMapping(value = "/addServiceCostRecord", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_URLENCODED})
+    public BaseResult addServiceCostRecord(Integer buildingNum, Integer roomNum) {
+
+        return BaseResult.create(null);
+    }
+
+    @RequestMapping(value = "/getServiceCostRecordAdmin", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_URLENCODED})
+    public BaseResult<ListByPageResponse<ServiceCostRecordAdminResponse>> getServiceCostRecordAdmin(Integer buildingNum, Integer roomNum, Integer pageNum, Integer pageSize) {
+        if(pageNum == null || pageSize == null) {
+            return BaseResult.create(ErrorCode.PARAMETER_VALIDATION_ERROR, "fail");
+        }
+        PageInfo<ServiceCost> pageInfo = serviceCostService.getServiceCostRecordByPage(buildingNum, roomNum, pageNum, pageSize);
+        List<ServiceCostRecordAdminResponse> list = pageInfo.getList().stream().map(serviceCost -> {
+            ServiceCostRecordAdminResponse record = new ServiceCostRecordAdminResponse();
+            BeanUtils.copyProperties(serviceCost, record);
+            record.setYear(serviceCost.getTime().getYear());
+            record.setMonth(serviceCost.getTime().getMonthValue());
+            record.setBuildingNum(serviceCost.getRoom().getBuildingNum());
+            record.setRoomNum(serviceCost.getRoom().getRoomNum());
+            if(serviceCost.getRoom().getOwner()!=null) {
+                record.setName(serviceCost.getRoom().getOwner().getName());
+                record.setPhoneNum(serviceCost.getRoom().getOwner().getPhoneNum());
+            }
+            return record;
+        }).collect(Collectors.toList());
+        ListByPageResponse response = new ListByPageResponse();
+        response.setList(list);
+        response.setTotal(pageInfo.getTotal());
+        response.setPageNum(pageInfo.getPageNum());
+        response.setPageSize(pageInfo.getPageSize());
+        return BaseResult.create(response);
+    }
+
 
 }

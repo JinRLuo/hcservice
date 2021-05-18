@@ -20,6 +20,19 @@
         )
     </select>
 
+    <select id="getServiceCostsBySearch" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT sc.COST_ID, sc.TIME, sc.COST, sc.CREATE_DATE, sc.ROOM_ID, sc.STATUS
+        FROM SERVICE_COST sc, ROOM_INFO ri
+        WHERE sc.ROOM_ID = ri.ROOM_ID
+        <if test="roomNum != null">
+            AND ROOM_NUM = #{roomNum,jdbcType=INTEGER}
+        </if>
+        <if test="buildingNum != null">
+            AND BUILDING_NUM = #{buildingNum,jdbcType=INTEGER}
+        </if>
+    </select>
+
+
     <select id="getServiceCostById" resultMap="BaseResultMap">
         SELECT COST_ID, TIME, COST, CREATE_DATE, ROOM_ID, STATUS
         FROM SERVICE_COST

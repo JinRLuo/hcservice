@@ -111,10 +111,13 @@ public class OrderServiceImpl implements OrderService {
             Car car = carMapper.getCarById(order.getItemId());
             int monthCount = 0;
             if (order.getChargeName().equals("month-park")) {
+                car.setType("月卡");
                 monthCount = 1;
             } else if (order.getChargeName().equals("half-year-park")) {
+                car.setType("半年卡");
                 monthCount = 6;
             } else if (order.getChargeName().equals("year-park")) {
+                car.setType("年卡");
                 monthCount = 12;
             }
             if (car.getEndTime().isAfter(nowDate)) {

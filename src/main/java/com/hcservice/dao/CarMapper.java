@@ -14,4 +14,6 @@ public interface CarMapper {
 
     int updateCarById(Car car);
 
+    List<Car> getCarInfoBySearch(String search);
+
 }

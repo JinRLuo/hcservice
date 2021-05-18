@@ -20,6 +20,12 @@
         where USER_ID = #{userId,jdbcType=INTEGER}
         order by CREATE_TIME desc
     </select>
+    <select id="getVisitorBySearch" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select VISITOR_ID, PEOPLE_COUNT, VISITOR_NAME, VISIT_TIME, CREATE_TIME, PHONE_NUMBER, STATUS, VISITING_REASON, REMARK, ROOM_ID, USER_ID
+        from VISITOR
+        where VISITOR_NAME LIKE #{search,jdbcType=VARCHAR} OR PHONE_NUMBER LIKE #{search,jdbcType=VARCHAR}
+        order by CREATE_TIME desc
+    </select>
     <insert id="insertVisitor" parameterType="com.hcservice.domain.model.Visitor">
     insert into VISITOR (VISITOR_ID, PEOPLE_COUNT, VISITOR_NAME, VISIT_TIME, CREATE_TIME, PHONE_NUMBER, STATUS, VISITING_REASON, REMARK, ROOM_ID, USER_ID)
     values (
@@ -36,4 +42,11 @@
         #{user.userId,jdbcType=INTEGER}
     )
   </insert>
+  <update id="updateVisitorStatus" parameterType="java.lang.Integer">
+      update VISITOR
+      set
+          STATUS = 1
+      where
+          VISITOR_ID = #{visitorId,jdbcType=INTEGER}
+  </update>
 </mapper>

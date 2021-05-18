@@ -1,5 +1,7 @@
 package com.hcservice.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hcservice.common.BusinessException;
 import com.hcservice.common.ErrorCode;
 import com.hcservice.dao.RoomMapper;
@@ -53,6 +55,18 @@ public class VisitorServiceImpl implements VisitorService {
     @Override
     public List<Visitor> getVisitsByUserId(Integer userId) {
         return visitorMapper.getVisitorByUserId(userId);
+    }
+
+    @Override
+    public PageInfo<Visitor> getVisitsByPage(String search, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Visitor> visitors = visitorMapper.getVisitorBySearch(search);
+        PageInfo<Visitor> pageInfo = new PageInfo<>(visitors);
+        return pageInfo;
+    }
+
+    public int confirmed(Integer visitorId) {
+        return visitorMapper.updateVisitorStatus(visitorId);
     }
 
     private Visitor convertVisitorFromSubscribeRequest(SubscribeRequest request) {
