@@ -29,23 +29,6 @@ public class ServiceCostController extends BaseController {
     @Autowired
     ServiceCostService serviceCostService;
 
-    @UserLoginToken
-    @RequestMapping(value = "/user/getServiceCostRecord", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_URLENCODED})
-    public BaseResult<ServiceCostRecordResponse> getServiceCostRecord() {
-        User user = AuthenticationInterceptor.getLoginUser();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        List<ServiceCost> costList = serviceCostService.getNotPayServiceCostRecord(user.getUserId());
-        List<ServiceCostRecordResponse> responses = costList.stream().map(cost -> {
-            ServiceCostRecordResponse response = new ServiceCostRecordResponse();
-            BeanUtils.copyProperties(cost, response);
-            response.setTime(dtf.format(cost.getTime()));
-            response.setBuildingNum(cost.getRoom().getBuildingNum());
-            response.setRoomNum(cost.getRoom().getRoomNum());
-            return response;
-        }).collect(Collectors.toList());
-        return BaseResult.create(responses);
-    }
-
     @RequestMapping(value = "/getServiceCostRecordAdmin", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_URLENCODED})
     public BaseResult<ListByPageResponse<ServiceCostRecordAdminResponse>> getServiceCostRecordAdmin(Integer buildingNum, Integer roomNum, Integer pageNum, Integer pageSize) {
         if(pageNum == null || pageSize == null) {

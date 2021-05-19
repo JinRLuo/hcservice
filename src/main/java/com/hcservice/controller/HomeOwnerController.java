@@ -43,37 +43,6 @@ public class HomeOwnerController extends BaseController {
     @Autowired
     private ComplaintService complaintService;
 
-    @UserLoginToken
-    @RequestMapping(value = "/user/bindHomeOwnerInfo", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_URLENCODED})
-    public BaseResult bindHomeOwnerInfo(BindHomeOwnerInfoRequest request) throws BusinessException {
-        User user = AuthenticationInterceptor.getLoginUser();
-        if(StringUtils.isAnyEmpty(request.getName(), request.getCredentialType(), request.getCredentialNum(), request.getPhoneNum())) {
-            return BaseResult.create(ErrorCode.PARAMETER_VALIDATION_ERROR, "fail");
-        }
-        int res = homeOwnerService.bindHomeOwnerInfo(request, user);
-        if (res < 1) {
-            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
-        }
-        return BaseResult.create(null);
-    }
-
-    @UserLoginToken
-    @RequestMapping(value = "/user/getBindHouse", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_URLENCODED})
-    public BaseResult<BindHouseInfoResponse> getBindHouse() {
-        User user = AuthenticationInterceptor.getLoginUser();
-        List<Room> rooms = homeOwnerService.getRoomsByUserId(user.getUserId());
-        List<BindHouseInfoResponse> responses = rooms.stream().map(room -> {
-            BindHouseInfoResponse response = new BindHouseInfoResponse();
-            BeanUtils.copyProperties(room, response);
-            response.setName(room.getOwner().getName());
-            response.setCredentialType(room.getOwner().getCredentialType());
-            response.setCredentialNum(room.getOwner().getCredentialNum());
-            response.setPhoneNum(room.getOwner().getPhoneNum());
-            return response;
-        }).collect(Collectors.toList());
-        return BaseResult.create(responses);
-    }
-
     @RequestMapping(value = "/getBindRequest", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_URLENCODED})
     public BaseResult<List<HomeOwnerInfoResponse>> getBindRequest() {
         List<HomeOwner> homeOwners = homeOwnerService.getBindRequest();
