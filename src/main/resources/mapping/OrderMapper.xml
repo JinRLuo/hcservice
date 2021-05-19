@@ -43,6 +43,12 @@
         from `ORDER`
         where ORDER_ID = #{orderId,jdbcType=INTEGER}
     </select>
+    <select id="getOrderListBySearch" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select ORDER_ID, CHARGE_NAME, TYPE, ITEM_ID, ORDER_PRICE, CREATE_TIME, STATUS, USER_ID
+        from `ORDER`
+        where ORDER_ID LIKE #{search,jdbcType=VARCHAR}
+        order by CREATE_TIME DESC
+    </select>
 
 
     <resultMap id="ConfigPriceResultMap" type="com.hcservice.domain.model.ConfigPrice">

@@ -139,6 +139,9 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new BusinessException(ErrorCode.PHONE_NUMBER_UNREGISTERED);
         }
+        if(user.getStatus() == 0) {
+            throw new BusinessException(ErrorCode.ACCOUNT_DISABLED);
+        }
         return user;
     }
 
@@ -146,7 +149,10 @@ public class UserServiceImpl implements UserService {
     public User loginByPwd(String phoneNum, String password) throws BusinessException {
         User user = userMapper.getUserByPhoneNum(phoneNum);
         if (user == null || !user.getPassword().equals(password)) {
-            throw new BusinessException(ErrorCode.ACCOUNT_LOGIN_FAIL);
+            throw new BusinessException(ErrorCode.PHONE_LOGIN_FAIL);
+        }
+        if(user.getStatus() == 0) {
+            throw new BusinessException(ErrorCode.ACCOUNT_DISABLED);
         }
         return user;
     }

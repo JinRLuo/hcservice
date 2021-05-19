@@ -1,5 +1,7 @@
 package com.hcservice.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hcservice.common.BusinessException;
 import com.hcservice.common.ErrorCode;
 import com.hcservice.dao.CarMapper;
@@ -7,12 +9,14 @@ import com.hcservice.dao.OrderMapper;
 import com.hcservice.dao.ServiceCostMapper;
 import com.hcservice.domain.model.*;
 import com.hcservice.service.OrderService;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -147,5 +151,13 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException(ErrorCode.UNKNOWN_ERROR);
         }
         return 1;
+    }
+
+    @Override
+    public PageInfo<Order> getOrderListByPage(String search, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Order> orders = orderMapper.getOrderListBySearch(search);
+        PageInfo<Order> pageInfo = new PageInfo<>(orders);
+        return pageInfo;
     }
 }

@@ -1,5 +1,6 @@
 package com.hcservice.service;
 
+import com.github.pagehelper.PageInfo;
 import com.hcservice.common.BusinessException;
 import com.hcservice.domain.model.Order;
 import com.hcservice.domain.model.User;
@@ -13,5 +14,7 @@ public interface OrderService {
     Order getOrderInfo(String orderId);
 
     int paymentOrder(String orderId, User user) throws BusinessException;
+
+    PageInfo<Order> getOrderListByPage(String search, Integer pageNum, Integer pageSize);
 
 }

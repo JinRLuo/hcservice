@@ -40,15 +40,32 @@
     </select>
 
     <update id="updateServiceCostById" parameterType="com.hcservice.domain.model.ServiceCost">
-    update SERVICE_COST
-    set
-        TIME = #{time,jdbcType=TIMESTAMP},
-        COST = #{cost,jdbcType=INTEGER},
-        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
-        ROOM_ID = #{room.roomId,jdbcType=INTEGER},
-        STATUS = #{status,jdbcType=INTEGER}
-    where
-        COST_ID = #{costId,jdbcType=INTEGER}
-  </update>
+        update SERVICE_COST
+        set
+            TIME = #{time,jdbcType=TIMESTAMP},
+            COST = #{cost,jdbcType=INTEGER},
+            CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+            ROOM_ID = #{room.roomId,jdbcType=INTEGER},
+            STATUS = #{status,jdbcType=INTEGER}
+        where
+            COST_ID = #{costId,jdbcType=INTEGER}
+    </update>
+
+    <update id="deleteServiceCostByCostId" parameterType="java.lang.Integer">
+        delete from SERVICE_COST
+        WHERE COST_ID = #{costId,jdbcType=INTEGER}
+    </update>
+
+    <update id="insertServiceCost" parameterType="com.hcservice.domain.model.ServiceCost">
+        insert into SERVICE_COST(TIME, COST, CREATE_DATE, ROOM_ID, STATUS)
+        VALUES
+        (
+            #{time,jdbcType=TIMESTAMP},
+            #{cost,jdbcType=INTEGER},
+            #{createDate,jdbcType=TIMESTAMP},
+            #{room.roomId,jdbcType=INTEGER},
+            #{status,jdbcType=INTEGER}
+        )
+    </update>
 
 </mapper>

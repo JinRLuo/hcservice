@@ -14,7 +14,7 @@ public enum ErrorCode {
 
     //20000开头为用户信息相关错误定义
     ACCOUNT_NOT_EXIST(20001,"用户不存在"),
-    ACCOUNT_LOGIN_FAIL(20002,"手机号或密码不正确"),
+    ACCOUNT_LOGIN_FAIL(20002,"账号或密码不正确"),
     ACCOUNT_NOT_LOGIN(20003,"用户还未登录"),
     ACCOUNT_DISABLED(20004,"账户被禁用，请联系管理员!"),
     ACCOUNT_EXPIRED(20005,"账号过期，请联系管理员!"),
@@ -27,6 +27,7 @@ public enum ErrorCode {
     IMAGE_CAN_NOT_BE_NULL(20012, "图片不能为空"),
     IMAGE_FORMAT_ERROR(20013, "图片格式错误"),
     IMAGE_UPDATE_ERROR(20014, "图片上传发生错误"),
+    PHONE_LOGIN_FAIL(20015,"手机号或密码不正确"),
 
 
 

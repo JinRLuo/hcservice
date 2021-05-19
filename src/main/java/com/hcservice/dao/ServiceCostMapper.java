@@ -14,4 +14,8 @@ public interface ServiceCostMapper {
 
     int updateServiceCostById(ServiceCost serviceCost);
 
+    int deleteServiceCostByCostId(Integer costId);
+
+    int insertServiceCost(ServiceCost serviceCost);
+
 }
