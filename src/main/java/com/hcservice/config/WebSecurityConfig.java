@@ -54,7 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     resp.setContentType("application/json;charset=utf-8");
                     PrintWriter out = resp.getWriter();
                     Admin admin = (Admin) principal;
-                    out.write(JSON.toJSONString(BaseResult.create(admin.getAdminName())));
+                    admin.setPassword("");
+                    out.write(JSON.toJSONString(BaseResult.create(admin)));
                     out.flush();
                     out.close();
                 })
