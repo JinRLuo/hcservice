@@ -21,6 +21,17 @@
         from ROOM_INFO
         where ROOM_NUM = #{roomNum,jdbcType=INTEGER} and BUILDING_NUM = #{buildingNum,jdbcType=INTEGER}
     </select>
+    <select id="getRoomsBySearch" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select ROOM_ID, ROOM_NUM, STATUS, OWNER_ID, BUILDING_NUM, AREA, BUILDING_ID
+        from ROOM_INFO
+        where 1=1
+        <if test="roomNum != null">
+            and ROOM_NUM = #{roomNum,jdbcType=INTEGER}
+        </if>
+        <if test="buildingNum != null">
+            and BUILDING_NUM = #{buildingNum,jdbcType=INTEGER}
+        </if>
+    </select>
     <select id="getRoomsByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select ri.ROOM_ID, ri.ROOM_NUM, ri.STATUS, ri.OWNER_ID, ri.BUILDING_NUM, ri.AREA, ri.BUILDING_ID
         from ROOM_INFO ri, HOMEOWNER_INFO hi

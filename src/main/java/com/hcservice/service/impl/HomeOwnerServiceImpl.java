@@ -1,5 +1,7 @@
 package com.hcservice.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hcservice.common.BusinessException;
 import com.hcservice.common.ErrorCode;
 import com.hcservice.dao.HomeOwnerMapper;
@@ -44,6 +46,14 @@ public class HomeOwnerServiceImpl implements HomeOwnerService {
     @Override
     public List<Room> getRoomsByUserId(Integer userId) {
         return roomMapper.getRoomsByUserId(userId);
+    }
+
+    @Override
+    public PageInfo<Room> getRoomsByPage(Integer buildingNum, Integer roomNum, Integer pageNum, Integer pageSize){
+        PageHelper.startPage(pageNum, pageSize);
+        List<Room> rooms = roomMapper.getRoomsBySearch(buildingNum, roomNum);
+        PageInfo<Room> pageInfo = new PageInfo<>(rooms);
+        return pageInfo;
     }
 
     @Override

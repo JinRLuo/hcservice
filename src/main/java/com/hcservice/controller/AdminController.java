@@ -2,6 +2,7 @@ package com.hcservice.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.hcservice.common.BusinessException;
 import com.hcservice.common.ErrorCode;
 import com.hcservice.common.utils.StringUtil;
 import com.hcservice.domain.model.Admin;
@@ -13,6 +14,7 @@ import com.hcservice.domain.response.UserInfoResponse;
 import com.hcservice.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,6 +52,19 @@ public class AdminController extends BaseController {
         admin.setPictureUrl("/img/1.img");
         admin.setStatus(true);
         return userService.adminRegister(admin);
+    }
+
+    @RequestMapping(value = "/modifyPassword", method = {RequestMethod.POST})
+    public BaseResult modifyPassword(String oldPassword, String newPassword) throws BusinessException {
+        if(StringUtils.isAnyEmpty(oldPassword, newPassword)) {
+            return BaseResult.create(ErrorCode.PARAMETER_VALIDATION_ERROR, "fail");
+        }
+        Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int res = userService.modifyAdminPassword(admin, oldPassword, newPassword);
+        if(res<1){
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        return BaseResult.create(null);
     }
 
     @RequestMapping(value = "/getAdminInfoList", method = {RequestMethod.POST})

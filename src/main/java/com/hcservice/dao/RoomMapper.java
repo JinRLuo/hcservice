@@ -12,4 +12,6 @@ public interface RoomMapper {
 
     List<Room> getRoomsByUserId(Integer userId);
 
+    List<Room> getRoomsBySearch(Integer buildingNum, Integer roomNum);
+
 }

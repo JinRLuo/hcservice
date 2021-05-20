@@ -28,6 +28,7 @@ public enum ErrorCode {
     IMAGE_FORMAT_ERROR(20013, "图片格式错误"),
     IMAGE_UPDATE_ERROR(20014, "图片上传发生错误"),
     PHONE_LOGIN_FAIL(20015,"手机号或密码不正确"),
+    OLD_PASSWORD_ERROR(20016,"原密码错误"),
 
 
 

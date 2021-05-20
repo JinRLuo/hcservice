@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,6 +84,17 @@ public class UserServiceImpl implements UserService {
             return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
         }
         return BaseResult.create(admin.getAdminName());
+    }
+
+    @Override
+    public int modifyAdminPassword(Admin admin, String oldPassword, String newPassword) throws BusinessException {
+        admin = adminMapper.getAdminByName(admin.getAdminName());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if(!passwordEncoder.matches(oldPassword, admin.getPassword())) {
+            throw new BusinessException(ErrorCode.OLD_PASSWORD_ERROR);
+        }
+        admin.setPassword(passwordEncoder.encode(newPassword));
+        return adminMapper.updateByPrimaryKey(admin);
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.hcservice.web.interceptor.AuthenticationInterceptor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -67,6 +68,28 @@ public class HomeOwnerController extends BaseController {
             return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
         }
         return BaseResult.create(null);
+    }
+
+    @RequestMapping(value = "/getRoomListAdmin", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_URLENCODED})
+    public BaseResult<ListByPageResponse<RoomInfoAdminResponse>> getRoomListAdmin(Integer buildingNum, Integer roomNum, Integer pageNum, Integer pageSize) {
+        if(pageNum == null || pageSize == null) {
+            return BaseResult.create(ErrorCode.PARAMETER_VALIDATION_ERROR, "fail");
+        }
+        PageInfo<Room> pageInfo = homeOwnerService.getRoomsByPage(buildingNum, roomNum, pageNum, pageSize);
+        List<RoomInfoAdminResponse> list = pageInfo.getList().stream().map(room -> {
+            RoomInfoAdminResponse roomInfo = new RoomInfoAdminResponse();
+            BeanUtils.copyProperties(room, roomInfo);
+            if(room.getOwner() != null) {
+                BeanUtils.copyProperties(room.getOwner(), roomInfo);
+            }
+            return roomInfo;
+        }).collect(Collectors.toList());
+        ListByPageResponse<RoomInfoAdminResponse> response = new ListByPageResponse<>();
+        response.setPageNum(pageInfo.getPageNum());
+        response.setPageSize(pageInfo.getPageSize());
+        response.setTotal(pageInfo.getTotal());
+        response.setList(list);
+        return BaseResult.create(response);
     }
 
     /**
@@ -146,7 +169,6 @@ public class HomeOwnerController extends BaseController {
         response.setList(list);
         return BaseResult.create(response);
     }
-
 
 
 }

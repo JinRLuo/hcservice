@@ -18,6 +18,8 @@ public interface UserService extends UserDetailsService {
 
     BaseResult adminRegister(Admin admin);
 
+    int modifyAdminPassword(Admin admin, String oldPassword, String newPassword) throws BusinessException;
+
     BaseResult getOtp(String phoneNum);
 
     Boolean verityOtp(String phoneNum, String userOtpCode);
