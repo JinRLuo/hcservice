@@ -31,13 +31,6 @@ public class AdminController extends BaseController {
     @Autowired
     UserService userService;
 
-
-    @RequestMapping(value = "/login", method = {RequestMethod.POST})
-    public BaseResult login(String account, String password) {
-        BaseResult result = new BaseResult();
-        return result;
-    }
-
     @RequestMapping(value = "/register", method = {RequestMethod.POST})
     public BaseResult register(String account, String email, String phoneNum) {
         if(StringUtils.isAnyEmpty(account, email, phoneNum)) {
@@ -52,19 +45,6 @@ public class AdminController extends BaseController {
         admin.setPictureUrl("/img/1.img");
         admin.setStatus(true);
         return userService.adminRegister(admin);
-    }
-
-    @RequestMapping(value = "/modifyPassword", method = {RequestMethod.POST})
-    public BaseResult modifyPassword(String oldPassword, String newPassword) throws BusinessException {
-        if(StringUtils.isAnyEmpty(oldPassword, newPassword)) {
-            return BaseResult.create(ErrorCode.PARAMETER_VALIDATION_ERROR, "fail");
-        }
-        Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        int res = userService.modifyAdminPassword(admin, oldPassword, newPassword);
-        if(res<1){
-            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
-        }
-        return BaseResult.create(null);
     }
 
     @RequestMapping(value = "/getAdminInfoList", method = {RequestMethod.POST})

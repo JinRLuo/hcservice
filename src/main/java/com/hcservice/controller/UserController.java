@@ -18,6 +18,7 @@ import com.hcservice.web.interceptor.AuthenticationInterceptor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
@@ -114,6 +115,19 @@ public class UserController extends BaseController {
         User user = userService.loginByPwd(phoneNum, StringUtil.EncodeByMd5(password));
         String token = JwtUtil.getToken(user);
         return BaseResult.create(token);
+    }
+
+    @RequestMapping(value = "/modifyPassword", method = {RequestMethod.POST})
+    public BaseResult modifyPassword(String oldPassword, String newPassword) throws BusinessException {
+        if(StringUtils.isAnyEmpty(oldPassword, newPassword)) {
+            return BaseResult.create(ErrorCode.PARAMETER_VALIDATION_ERROR, "fail");
+        }
+        Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int res = userService.modifyAdminPassword(admin, oldPassword, newPassword);
+        if(res<1){
+            return BaseResult.create(ErrorCode.UNKNOWN_ERROR, "fail");
+        }
+        return BaseResult.create(null);
     }
 
     @UserLoginToken
