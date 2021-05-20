@@ -20,6 +20,8 @@ public class HomeOwner {
 
     private Room room;
 
+    private Integer roomId;
+
     private Integer status;
 
     public Integer getOwnerId() {
@@ -92,5 +94,13 @@ public class HomeOwner {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
     }
 }

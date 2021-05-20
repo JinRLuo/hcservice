@@ -19,7 +19,7 @@ public interface HomeOwnerService {
 
     List<HomeOwner> getBindRequest();
 
-    int auditHouse(Integer ownerId, Integer status);
+    int auditHouse(Integer ownerId, Integer status) throws BusinessException;
 
 
 }

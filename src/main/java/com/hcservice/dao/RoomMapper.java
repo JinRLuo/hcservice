@@ -14,4 +14,6 @@ public interface RoomMapper {
 
     List<Room> getRoomsBySearch(Integer buildingNum, Integer roomNum);
 
+    int updateRoomByRoomId(Room room);
+
 }

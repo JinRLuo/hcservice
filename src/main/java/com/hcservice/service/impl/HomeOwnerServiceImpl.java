@@ -63,7 +63,18 @@ public class HomeOwnerServiceImpl implements HomeOwnerService {
 
     @Override
     @Transactional
-    public int auditHouse(Integer ownerId, Integer status) {
+    public int auditHouse(Integer ownerId, Integer status) throws BusinessException {
+        HomeOwner homeOwner = homeOwnerMapper.getHomeOwnerByOwnerId(ownerId);
+        if(homeOwner == null){
+            throw new BusinessException(ErrorCode.UNKNOWN_ERROR);
+        }
+        homeOwner.setStatus(status);
+        Room room = roomMapper.getRoomById(homeOwner.getRoomId());
+        room.setOwner(homeOwner);
+        int res = roomMapper.updateRoomByRoomId(room);
+        if(res<1){
+            throw new BusinessException(ErrorCode.UNKNOWN_ERROR);
+        }
         return homeOwnerMapper.updateHomeOwnerStatusByOwnerId(ownerId, status);
     }
 }

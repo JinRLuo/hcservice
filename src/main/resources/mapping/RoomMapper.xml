@@ -37,5 +37,12 @@
         from ROOM_INFO ri, HOMEOWNER_INFO hi
         where hi.USER_ID = #{userId,jdbcType=INTEGER} and ri.OWNER_ID = hi.OWNER_ID and hi.STATUS = 1
     </select>
+    <update id="updateRoomByRoomId" parameterType="com.hcservice.domain.model.Room">
+        update ROOM_INFO
+        SET
+            OWNER_ID = #{owner.ownerId,jdbcType=INTEGER}
+        where
+            ROOM_ID = #{roomId,jdbcType=INTEGER}
+    </update>
 
 </mapper>

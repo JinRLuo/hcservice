@@ -20,10 +20,11 @@
         <result column="PHONE_NUMBER" jdbcType="VARCHAR" property="phoneNum" />
         <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
         <result column="STATUS" jdbcType="INTEGER" property="status" />
+        <result column="ROOM_ID" jdbcType="INTEGER" property="roomId" />
     </resultMap>
 
     <select id="getHomeOwnerByOwnerId" parameterType="java.lang.Integer" resultMap="SimpleResultMap">
-        select OWNER_ID, NAME, CREDENTIAL_TYPE, CREDENTIAL_NUM, PHONE_NUMBER, CREATE_TIME, STATUS
+        select OWNER_ID, NAME, CREDENTIAL_TYPE, CREDENTIAL_NUM, PHONE_NUMBER, CREATE_TIME, ROOM_ID , STATUS
         from HOMEOWNER_INFO
         where OWNER_ID = #{ownerId,jdbcType=INTEGER}
     </select>

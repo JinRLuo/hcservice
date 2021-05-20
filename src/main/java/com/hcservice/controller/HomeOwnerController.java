@@ -59,7 +59,7 @@ public class HomeOwnerController extends BaseController {
     }
 
     @RequestMapping(value = "/auditBindRequest", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_URLENCODED})
-    public BaseResult<List<HomeOwnerInfoResponse>> auditBindRequest(Integer ownerId, Integer status) {
+    public BaseResult auditBindRequest(Integer ownerId, Integer status) throws BusinessException {
         if(ownerId == null || status==null){
             return BaseResult.create(ErrorCode.PARAMETER_VALIDATION_ERROR, "fail");
         }
